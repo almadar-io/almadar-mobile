@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet, TextStyle, TextProps } from 'react-native';
+import { TextStyle, TextProps } from 'react-native';
 
 export type TypographyVariant = 
   | 'h1' 

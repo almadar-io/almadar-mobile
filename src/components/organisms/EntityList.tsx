@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Card } from '../atoms/Card';
 import { Typography } from '../atoms/Typography';
 import { VStack, HStack } from '../atoms/Stack';
@@ -12,7 +12,7 @@ export interface EntityListProps<T> {
   data: T[];
   keyExtractor: (item: T) => string;
   onItemPress?: (item: T) => void;
-  getBadgeVariant?: (column: keyof T, value: any) => 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error';
+  getBadgeVariant?: (column: keyof T, value: unknown) => 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error';
   isLoading?: boolean;
   isError?: boolean;
   onRetry?: () => void;

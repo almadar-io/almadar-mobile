@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Typography } from '../atoms/Typography';
 import { VStack } from '../atoms/Stack';
 import { Card } from '../atoms/Card';

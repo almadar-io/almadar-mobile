@@ -10,7 +10,7 @@ export function useNavigation() {
   const navigation = useRNNavigation();
   const route = useRoute();
 
-  const navigateTo = useCallback((screenName: string, params?: Record<string, any>, options?: NavigationOptions) => {
+  const navigateTo = useCallback((screenName: string, params?: Record<string, unknown>, options?: NavigationOptions) => {
     if (options?.replace) {
       navigation.replace(screenName, params);
     } else if (options?.reset) {
@@ -28,7 +28,7 @@ export function useNavigation() {
   }, [navigation]);
 
   const getParam = useCallback(<T,>(key: string, defaultValue?: T): T | undefined => {
-    const params = route.params as Record<string, any> | undefined;
+    const params = route.params as Record<string, unknown> | undefined;
     return params?.[key] ?? defaultValue;
   }, [route.params]);
 
@@ -41,7 +41,7 @@ export function useNavigation() {
   };
 }
 
-export function useParams<T extends Record<string, any>>(): T {
+export function useParams<T extends Record<string, unknown>>(): T {
   const route = useRoute();
   return (route.params as T) || {} as T;
 }
