@@ -1,5 +1,5 @@
-const almadarPlugin = require("../almadar-eslint");
 const tsParser = require("@typescript-eslint/parser");
+const tsPlugin = require("@typescript-eslint/eslint-plugin");
 
 module.exports = [
   // TypeScript + JSX parser
@@ -13,19 +13,13 @@ module.exports = [
         sourceType: "module",
       },
     },
-  },
-
-  // General rules for all TS files
-  {
-    files: ["**/*.ts", "**/*.tsx"],
     plugins: {
-      almadar: almadarPlugin,
+      "@typescript-eslint": tsPlugin,
     },
     rules: {
-      "almadar/no-as-any": "error",
-      "almadar/no-import-generated": "error",
-      // Note: strict organism rules disabled for initial development
-      // Can enable later: ...almadarPlugin.configs.strict
+      ...tsPlugin.configs.recommended.rules,
+      "@typescript-eslint/no-explicit-any": "error",
+      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
     },
   },
 
