@@ -1,0 +1,87 @@
+{
+  "name": "@almadar/mobile",
+  "version": "1.0.0",
+  "description": "React Native UI components for Almadar - extends @almadar/ui",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./components": {
+      "import": "./dist/components/index.js",
+      "types": "./dist/components/index.d.ts"
+    },
+    "./components/atoms": {
+      "import": "./dist/components/atoms/index.js",
+      "types": "./dist/components/atoms/index.d.ts"
+    },
+    "./components/molecules": {
+      "import": "./dist/components/molecules/index.js",
+      "types": "./dist/components/molecules/index.d.ts"
+    },
+    "./components/organisms": {
+      "import": "./dist/components/organisms/index.js",
+      "types": "./dist/components/organisms/index.d.ts"
+    },
+    "./hooks": {
+      "import": "./dist/hooks/index.js",
+      "types": "./dist/hooks/index.d.ts"
+    },
+    "./providers": {
+      "import": "./dist/providers/index.js",
+      "types": "./dist/providers/index.d.ts"
+    },
+    "./lib": {
+      "import": "./dist/lib/index.js",
+      "types": "./dist/lib/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup && tsc --declaration --emitDeclarationOnly --outDir dist --skipLibCheck",
+    "build:watch": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/",
+    "storybook": "cross-env STORYBOOK_ENABLED=true expo start",
+    "storybook:ios": "cross-env STORYBOOK_ENABLED=true expo start --ios",
+    "storybook:android": "cross-env STORYBOOK_ENABLED=true expo start --android",
+    "storybook-generate": "sb-rn-get-stories"
+  },
+  "dependencies": {
+    "@almadar/core": "workspace:*",
+    "@almadar/patterns": "workspace:*",
+    "@almadar/ui": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-native": ">=0.76.0",
+    "@react-navigation/native": "^6.0.0",
+    "react-native-safe-area-context": "^4.0.0",
+    "react-native-vector-icons": "^10.0.0"
+  },
+  "devDependencies": {
+    "@storybook/react-native": "^8.0.0",
+    "@storybook/addon-ondevice-controls": "^8.0.0",
+    "@storybook/addon-ondevice-actions": "^8.0.0",
+    "@storybook/addon-ondevice-backgrounds": "^8.0.0",
+    "@types/react": "^18.3.0",
+    "cross-env": "^7.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/almadar-io/almadar.git",
+    "directory": "packages/almadar-mobile"
+  }
+}
