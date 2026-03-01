@@ -1,31 +1,26 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Typography } from '../atoms/Typography';
 import { Button } from '../atoms/Button';
 import { VStack } from '../atoms/Stack';
 
 export interface ErrorStateProps {
-  title?: string;
   message?: string;
   onRetry?: () => void;
 }
 
 export const ErrorState: React.FC<ErrorStateProps> = ({
-  title = 'Something went wrong',
-  message = 'We encountered an error while loading your data.',
+  message = 'Something went wrong',
   onRetry,
 }) => {
   return (
-    <VStack align="center" justify="center" spacing={16} style={styles.container}>
-      <Typography variant="h4" color="#ef4444">
-        {title}
-      </Typography>
-      <Typography variant="body" color="#6b7280" align="center">
+    <VStack align="center" spacing={16} style={styles.container}>
+      <Typography variant="body" color="#ef4444">
         {message}
       </Typography>
       {onRetry && (
-        <Button variant="primary" onPress={onRetry}>
-          Try Again
+        <Button variant="secondary" onPress={onRetry}>
+          Retry
         </Button>
       )}
     </VStack>
@@ -34,8 +29,9 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    padding: 24,
-    minHeight: 200,
+    padding: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

@@ -21,7 +21,7 @@ export const FormField: React.FC<FormFieldProps> = ({
   style,
 }) => {
   return (
-    <VStack spacing={6} style={[styles.container, style]}>
+    <VStack spacing={6} style={[styles.container, style as ViewStyle]}>
       {label && (
         <View style={styles.labelContainer}>
           <Typography variant="label">
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   labelContainer: {
-    flexDirection: 'row',
+    marginBottom: 4,
   },
 });
 

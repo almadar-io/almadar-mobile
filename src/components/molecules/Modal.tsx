@@ -1,24 +1,25 @@
-import React from 'react';
-import {
-  View,
+import React, { useCallback } from 'react';
+import { 
+  Modal as RNModal, 
+  View, 
+  TouchableOpacity, 
   StyleSheet,
-  TouchableOpacity,
-  Modal as RNModal,
-  ModalProps as RNModalProps,
+  ViewStyle
 } from 'react-native';
-import { Typography } from '../atoms/Typography';
-import { Button } from '../atoms/Button';
-import { VStack, HStack } from '../atoms/Stack';
 import { Card } from '../atoms/Card';
+import { Typography } from '../atoms/Typography';
+import { VStack, HStack } from '../atoms/Stack';
 
-export interface ModalProps extends Omit<RNModalProps, 'visible'> {
+export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
-  showCloseButton?: boolean;
   size?: 'sm' | 'md' | 'lg';
+  showCloseButton?: boolean;
+  closeOnBackdrop?: boolean;
+  animationType?: 'none' | 'slide' | 'fade';
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -27,15 +28,19 @@ export const Modal: React.FC<ModalProps> = ({
   title,
   children,
   footer,
-  showCloseButton = true,
   size = 'md',
-  animationType = 'slide',
-  transparent = true,
+  showCloseButton = true,
+  closeOnBackdrop = true,
+  animationType = 'fade',
   ...modalProps
 }) => {
-  const handleBackdropPress = () => {
-    onClose();
-  };
+  const handleBackdropPress = useCallback(() => {
+    if (closeOnBackdrop) {
+      onClose();
+    }
+  }, [closeOnBackdrop, onClose]);
+
+  const transparent = animationType !== 'slide';
 
   return (
     <RNModal
@@ -52,7 +57,7 @@ export const Modal: React.FC<ModalProps> = ({
       >
         <View style={styles.centeredView}>
           <TouchableOpacity activeOpacity={1} onPress={(e) => e.stopPropagation()}>
-            <Card style={[styles.modalCard, styles[size]]}>
+            <Card style={[styles.modalCard, styles[size] as ViewStyle]}>
               <VStack spacing={16}>
                 {/* Header */}
                 {title && (
@@ -71,7 +76,7 @@ export const Modal: React.FC<ModalProps> = ({
 
                 {/* Footer */}
                 {footer && (
-                  <HStack spacing={8} justify="flex-end">
+                  <HStack justify="flex-end" spacing={12}>
                     {footer}
                   </HStack>
                 )}
@@ -97,31 +102,31 @@ const styles = StyleSheet.create({
   },
   modalCard: {
     width: '100%',
+    maxWidth: 400,
   },
   sm: {
-    maxWidth: 320,
+    maxWidth: 300,
   },
   md: {
     maxWidth: 400,
   },
   lg: {
-    maxWidth: 520,
+    maxWidth: 600,
   },
 });
 
 Modal.displayName = 'Modal';
 
-// Convenience export for common modal patterns
-export const ConfirmModal: React.FC<{
-  isOpen: boolean;
-  onClose: () => void;
+// Confirm Modal
+export interface ConfirmModalProps extends Omit<ModalProps, 'children' | 'footer'> {
+  message: string;
   onConfirm: () => void;
-  title?: string;
-  message?: string;
   confirmLabel?: string;
   cancelLabel?: string;
   isLoading?: boolean;
-}> = ({
+}
+
+export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   isOpen,
   onClose,
   onConfirm,
@@ -129,7 +134,7 @@ export const ConfirmModal: React.FC<{
   message = 'Are you sure you want to proceed?',
   confirmLabel = 'Confirm',
   cancelLabel = 'Cancel',
-  isLoading,
+  
 }) => {
   return (
     <Modal
@@ -138,12 +143,12 @@ export const ConfirmModal: React.FC<{
       title={title}
       footer={
         <>
-          <Button variant="secondary" onPress={onClose}>
+          <Typography variant="body" color="#6b7280" onPress={onClose}>
             {cancelLabel}
-          </Button>
-          <Button variant="destructive" onPress={onConfirm} isLoading={isLoading}>
+          </Typography>
+          <Typography variant="body" color="#ef4444" onPress={onConfirm}>
             {confirmLabel}
-          </Button>
+          </Typography>
         </>
       }
     >

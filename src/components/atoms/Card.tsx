@@ -4,7 +4,7 @@ import { View, StyleSheet, ViewStyle, TouchableOpacity } from 'react-native';
 export interface CardProps {
   children: React.ReactNode;
   onPress?: () => void;
-  style?: ViewStyle;
+  style?: ViewStyle | ViewStyle[];
   padding?: 'none' | 'sm' | 'md' | 'lg';
 }
 
@@ -21,12 +21,19 @@ export const Card: React.FC<CardProps> = ({
   style,
   padding = 'md',
 }) => {
+  const cardStyles: ViewStyle[] = [
+    styles.card,
+    paddingStyles[padding],
+  ];
+  
+  if (Array.isArray(style)) {
+    cardStyles.push(...style);
+  } else if (style) {
+    cardStyles.push(style);
+  }
+
   const content = (
-    <View style={[
-      styles.card,
-      paddingStyles[padding],
-      style,
-    ]}>
+    <View style={cardStyles}>
       {children}
     </View>
   );

@@ -39,9 +39,9 @@ export function CardGrid<T>({
 
   return (
     <View style={styles.container}>
-      {data.map((_item, index) => (
+      {data.map((_item, _index) => (
         <View 
-          key={keyExtractor(item)} 
+          key={keyExtractor(_item)} 
           style={[
             styles.item,
             columns > 1 && { width: `${100 / columns}%` }

@@ -6,9 +6,12 @@ export interface NavigationOptions {
   reset?: boolean;
 }
 
-export function useNavigation() {
-  const navigation = useRNNavigation();
-  const route = useRoute();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function useNavigation<T extends Record<string, unknown> = Record<string, any>>() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const navigation = useRNNavigation<any>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const route = useRoute<any>();
 
   const navigateTo = useCallback((screenName: string, params?: Record<string, unknown>, options?: NavigationOptions) => {
     if (options?.replace) {
@@ -19,7 +22,7 @@ export function useNavigation() {
         routes: [{ name: screenName, params }],
       });
     } else {
-      navigation.navigate(screenName as never, params as never);
+      navigation.navigate(screenName, params);
     }
   }, [navigation]);
 
@@ -27,8 +30,8 @@ export function useNavigation() {
     navigation.goBack();
   }, [navigation]);
 
-  const getParam = useCallback(<T,>(key: string, defaultValue?: T): T | undefined => {
-    const params = route.params as Record<string, unknown> | undefined;
+  const getParam = useCallback(<K extends keyof T>(key: K, defaultValue?: T[K]): T[K] | undefined => {
+    const params = route.params as T | undefined;
     return params?.[key] ?? defaultValue;
   }, [route.params]);
 
@@ -37,11 +40,13 @@ export function useNavigation() {
     goBack,
     getParam,
     currentRoute: route.name,
-    params: route.params,
+    params: route.params as T,
   };
 }
 
-export function useParams<T extends Record<string, unknown>>(): T {
-  const route = useRoute();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function useParams<T extends Record<string, any> = Record<string, unknown>>(): T {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const route = useRoute<any>();
   return (route.params as T) || {} as T;
 }

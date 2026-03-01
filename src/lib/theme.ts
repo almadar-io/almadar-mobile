@@ -1,4 +1,7 @@
-import { ViewStyle, TextStyle } from 'react-native';
+import type { RNTheme } from '../providers/ThemeContext';
+
+// Re-export RNTheme from providers
+export type { RNTheme } from '../providers/ThemeContext';
 
 // Web theme structure (from @almadar/ui)
 export interface WebTheme {
@@ -7,26 +10,30 @@ export interface WebTheme {
   borderRadius: Record<string, string>;
 }
 
-// RN theme structure
-export interface RNTheme {
-  colors: Record<string, string>;
-  spacing: Record<string, number>;
-  borderRadius: Record<string, number>;
-  button: {
-    variants: Record<string, ViewStyle>;
-    sizes: Record<string, ViewStyle>;
-    text: Record<string, TextStyle>;
-  };
-}
-
 /**
  * Convert web theme (CSS values) to React Native theme (numeric values)
  */
 export function convertThemeToRN(webTheme: WebTheme): RNTheme {
+  const spacing = convertSpacing(webTheme.spacing);
+  const borderRadius = convertSpacing(webTheme.borderRadius);
+  
   return {
-    colors: webTheme.colors,
-    spacing: convertSpacing(webTheme.spacing),
-    borderRadius: convertSpacing(webTheme.borderRadius),
+    colors: webTheme.colors as RNTheme['colors'],
+    spacing: {
+      xs: spacing.xs || 4,
+      sm: spacing.sm || 8,
+      md: spacing.md || 16,
+      lg: spacing.lg || 24,
+      xl: spacing.xl || 32,
+      ...spacing,
+    },
+    borderRadius: {
+      sm: borderRadius.sm || 4,
+      md: borderRadius.md || 8,
+      lg: borderRadius.lg || 12,
+      xl: borderRadius.xl || 16,
+      ...borderRadius,
+    },
     button: {
       variants: {
         primary: {
@@ -67,7 +74,7 @@ export function convertThemeToRN(webTheme: WebTheme): RNTheme {
           color: '#1e293b',
         },
         ghost: {
-          color: webTheme.colors.primary || '#6366f1',
+          color: '#6366f1',
         },
         destructive: {
           color: '#ffffff',
@@ -77,37 +84,15 @@ export function convertThemeToRN(webTheme: WebTheme): RNTheme {
   };
 }
 
-/**
- * Convert CSS spacing values (e.g., "16px", "1rem") to React Native numeric values
- */
 function convertSpacing(spacing: Record<string, string>): Record<string, number> {
   const result: Record<string, number> = {};
-  
   for (const [key, value] of Object.entries(spacing)) {
-    result[key] = parseCssValue(value);
+    const num = parseFloat(value);
+    result[key] = isNaN(num) ? 0 : num;
   }
-  
   return result;
 }
 
-/**
- * Parse CSS value to number
- * Supports: px, rem (assuming 1rem = 16px)
- */
-function parseCssValue(value: string): number {
-  if (value.endsWith('px')) {
-    return parseFloat(value);
-  }
-  if (value.endsWith('rem')) {
-    return parseFloat(value) * 16;
-  }
-  // Default fallback
-  return parseFloat(value) || 0;
-}
-
-/**
- * Default RN theme (fallback when web theme is not available)
- */
 export const defaultRNTheme: RNTheme = {
   colors: {
     primary: '#6366f1',
@@ -127,7 +112,6 @@ export const defaultRNTheme: RNTheme = {
     md: 16,
     lg: 24,
     xl: 32,
-    '2xl': 48,
   },
   borderRadius: {
     sm: 4,

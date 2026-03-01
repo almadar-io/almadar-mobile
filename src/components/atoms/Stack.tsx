@@ -6,7 +6,7 @@ export interface VStackProps {
   align?: 'flex-start' | 'center' | 'flex-end' | 'stretch';
   justify?: 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around';
   children: React.ReactNode;
-  style?: ViewStyle;
+  style?: ViewStyle | ViewStyle[];
   testID?: string;
 }
 
@@ -18,15 +18,19 @@ export const VStack: React.FC<VStackProps> = ({
   style,
   testID,
 }) => {
+  const stackStyles: ViewStyle[] = [
+    styles.vstack,
+    { gap: spacing, alignItems: align, justifyContent: justify },
+  ];
+  
+  if (Array.isArray(style)) {
+    stackStyles.push(...style);
+  } else if (style) {
+    stackStyles.push(style);
+  }
+
   return (
-    <View
-      testID={testID}
-      style={[
-        styles.vstack,
-        { gap: spacing, alignItems: align, justifyContent: justify },
-        style,
-      ]}
-    >
+    <View testID={testID} style={stackStyles}>
       {children}
     </View>
   );
@@ -37,7 +41,7 @@ export interface HStackProps {
   align?: 'flex-start' | 'center' | 'flex-end' | 'stretch' | 'baseline';
   justify?: 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around' | 'space-evenly';
   children: React.ReactNode;
-  style?: ViewStyle;
+  style?: ViewStyle | ViewStyle[];
   testID?: string;
 }
 
@@ -49,15 +53,19 @@ export const HStack: React.FC<HStackProps> = ({
   style,
   testID,
 }) => {
+  const stackStyles: ViewStyle[] = [
+    styles.hstack,
+    { gap: spacing, alignItems: align, justifyContent: justify },
+  ];
+  
+  if (Array.isArray(style)) {
+    stackStyles.push(...style);
+  } else if (style) {
+    stackStyles.push(style);
+  }
+
   return (
-    <View
-      testID={testID}
-      style={[
-        styles.hstack,
-        { gap: spacing, alignItems: align, justifyContent: justify },
-        style,
-      ]}
-    >
+    <View testID={testID} style={stackStyles}>
       {children}
     </View>
   );
@@ -65,16 +73,20 @@ export const HStack: React.FC<HStackProps> = ({
 
 export interface BoxProps {
   children?: React.ReactNode;
-  style?: ViewStyle;
+  style?: ViewStyle | ViewStyle[];
   testID?: string;
 }
 
 export const Box: React.FC<BoxProps> = ({ children, style, testID }) => {
-  return (
-    <View testID={testID} style={style}>
-      {children}
-    </View>
-  );
+  const boxStyles: ViewStyle[] = [styles.box];
+  
+  if (Array.isArray(style)) {
+    boxStyles.push(...style);
+  } else if (style) {
+    boxStyles.push(style);
+  }
+
+  return <View testID={testID} style={boxStyles}>{children}</View>;
 };
 
 const styles = StyleSheet.create({
@@ -83,6 +95,9 @@ const styles = StyleSheet.create({
   },
   hstack: {
     flexDirection: 'row',
+  },
+  box: {
+    // Base box styles - mostly empty to allow full customization
   },
 });
 

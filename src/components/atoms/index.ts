@@ -1,20 +1,23 @@
-export { VStack, HStack, Box } from './Stack';
-export type { VStackProps, HStackProps, BoxProps } from './Stack';
+// Layout primitives
+export { Box, VStack, HStack } from './Stack';
+export type { BoxProps, VStackProps, HStackProps } from './Stack';
 
-export { Typography, H1, H2, H3, H4, Body, BodySmall, Caption, Label } from './Typography';
+// Typography
+export { Typography } from './Typography';
 export type { TypographyProps, TypographyVariant } from './Typography';
 
-export { Button } from './Button';
-export type { ButtonProps, ButtonVariant, ButtonSize } from './Button';
-
-export { Input } from './Input';
-export type { InputProps } from './Input';
-
+// Components
 export { Card } from './Card';
 export type { CardProps } from './Card';
+
+export { Button } from './Button';
+export type { ButtonProps } from './Button';
 
 export { Badge } from './Badge';
 export type { BadgeProps, BadgeVariant, BadgeSize } from './Badge';
 
+export { Input } from './Input';
+export type { InputProps } from './Input';
+
 export { Icon } from './Icon';
-export type { IconProps, IconName } from './Icon';
+export type { IconProps } from './Icon';

@@ -1,22 +1,20 @@
 import React from 'react';
 import { 
   FlatList, 
-  FlatListProps, 
-  StyleSheet, 
-  View 
+  FlatListProps
 } from 'react-native';
-import { LoadingState } from './LoadingState';
 import { EmptyState } from './EmptyState';
+import { LoadingState } from './LoadingState';
 import { ErrorState } from './ErrorState';
 
-export interface ListProps<T> extends Omit<FlatListProps<T>, 'data' | 'renderItem'> {
+export interface ListProps<T> extends Omit<FlatListProps<T>, 'renderItem'> {
   data: T[];
-  renderItem: (item: T, index: number) => React.ReactElement;
+  renderItem: (item: T) => React.ReactElement;
   keyExtractor: (item: T) => string;
   isLoading?: boolean;
   isError?: boolean;
-  emptyMessage?: string;
   onRetry?: () => void;
+  emptyMessage?: string;
 }
 
 export function List<T>({
@@ -25,9 +23,8 @@ export function List<T>({
   keyExtractor,
   isLoading,
   isError,
-  emptyMessage = 'No items found',
   onRetry,
-  contentContainerStyle,
+  emptyMessage = 'No items found',
   ...flatListProps
 }: ListProps<T>) {
   if (isLoading) {
@@ -45,18 +42,11 @@ export function List<T>({
   return (
     <FlatList
       data={data}
-      renderItem={({ item, index }) => renderItem(item, index)}
+      renderItem={({ item }) => renderItem(item)}
       keyExtractor={keyExtractor}
-      contentContainerStyle={[styles.container, contentContainerStyle]}
       {...flatListProps}
     />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-  },
-});
 
 List.displayName = 'List';
