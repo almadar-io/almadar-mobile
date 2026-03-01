@@ -85,5 +85,6 @@
     "type": "git",
     "url": "https://github.com/almadar-io/almadar.git",
     "directory": "packages/almadar-mobile"
-  }
+  },
+  "packageManager": "pnpm@9.15.9"
 }
