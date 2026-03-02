@@ -5,7 +5,7 @@ import { EmptyState } from '../molecules/EmptyState';
 import { ErrorState } from '../molecules/ErrorState';
 
 export interface CardGridProps<T> {
-  data: T[];
+  entity: T[];
   renderItem: (item: T) => React.ReactElement;
   keyExtractor: (item: T) => string;
   isLoading?: boolean;
@@ -16,7 +16,7 @@ export interface CardGridProps<T> {
 }
 
 export function CardGrid<T>({
-  data,
+  entity,
   renderItem,
   keyExtractor,
   isLoading,
@@ -33,13 +33,13 @@ export function CardGrid<T>({
     return <ErrorState onRetry={onRetry} />;
   }
 
-  if (!data || data.length === 0) {
+  if (!entity || entity.length === 0) {
     return <EmptyState message={emptyMessage} />;
   }
 
   return (
     <View style={styles.container}>
-      {data.map((_item, _index) => (
+      {entity.map((_item, _index) => (
         <View 
           key={keyExtractor(_item)} 
           style={[

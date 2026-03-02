@@ -7,9 +7,8 @@ import { List } from '../molecules/List';
 import { Badge } from '../atoms/Badge';
 
 export interface EntityListProps<T> {
-  entity: string;
+  entity: T | readonly T[];
   columns: Array<keyof T>;
-  data: T[];
   keyExtractor: (item: T) => string;
   onItemPress?: (item: T) => void;
   getBadgeVariant?: (column: keyof T, value: unknown) => 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error';
@@ -22,15 +21,15 @@ export interface EntityListProps<T> {
 export function EntityList<T>({
   entity,
   columns,
-  data,
   keyExtractor,
   onItemPress,
   getBadgeVariant,
   isLoading,
   isError,
   onRetry,
-  emptyMessage = `No ${entity.toLowerCase()}s found`,
+  emptyMessage = 'No items found',
 }: EntityListProps<T>) {
+  const items: T[] = Array.isArray(entity) ? [...entity] : entity ? [entity as T] : [];
   const renderItem = (item: T) => {
     const primaryColumn = columns[0];
     const secondaryColumns = columns.slice(1);
@@ -72,7 +71,7 @@ export function EntityList<T>({
 
   return (
     <List
-      data={data}
+      data={items}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
       isLoading={isLoading}
