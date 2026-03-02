@@ -1,5 +1,6 @@
 import React from 'react';
-import { Text, TextStyle, TextProps } from 'react-native';
+import { Text, StyleSheet, TextStyle, TextProps } from 'react-native';
+import { useTheme } from '../../providers/ThemeContext';
 
 export type TypographyVariant = 
   | 'h1' 
@@ -17,16 +18,6 @@ export interface TypographyProps extends TextProps {
   children: React.ReactNode;
 }
 
-const variantStyles: Record<TypographyVariant, TextStyle> = {
-  h1: { fontSize: 32, fontWeight: '700', lineHeight: 40 },
-  h2: { fontSize: 24, fontWeight: '600', lineHeight: 32 },
-  h3: { fontSize: 20, fontWeight: '600', lineHeight: 28 },
-  h4: { fontSize: 18, fontWeight: '500', lineHeight: 24 },
-  body: { fontSize: 16, fontWeight: '400', lineHeight: 24 },
-  caption: { fontSize: 14, fontWeight: '400', lineHeight: 20 },
-  label: { fontSize: 12, fontWeight: '500', lineHeight: 16, textTransform: 'uppercase' },
-};
-
 export function Typography({
   variant = 'body',
   color,
@@ -35,6 +26,54 @@ export function Typography({
   style,
   ...rest
 }: TypographyProps) {
+  const theme = useTheme();
+
+  const variantStyles: Record<TypographyVariant, TextStyle> = {
+    h1: {
+      fontSize: theme.typography.sizes['4xl'],
+      fontWeight: theme.typography.fontWeight.bold,
+      lineHeight: theme.typography.lineHeight * theme.typography.sizes['4xl'],
+      color: theme.colors.foreground,
+    },
+    h2: {
+      fontSize: theme.typography.sizes['3xl'],
+      fontWeight: theme.typography.fontWeight.bold,
+      lineHeight: theme.typography.lineHeight * theme.typography.sizes['3xl'],
+      color: theme.colors.foreground,
+    },
+    h3: {
+      fontSize: theme.typography.sizes['2xl'],
+      fontWeight: theme.typography.fontWeight.bold,
+      lineHeight: theme.typography.lineHeight * theme.typography.sizes['2xl'],
+      color: theme.colors.foreground,
+    },
+    h4: {
+      fontSize: theme.typography.sizes.xl,
+      fontWeight: theme.typography.fontWeight.medium,
+      lineHeight: theme.typography.lineHeight * theme.typography.sizes.xl,
+      color: theme.colors.foreground,
+    },
+    body: {
+      fontSize: theme.typography.sizes.base,
+      fontWeight: theme.typography.fontWeight.normal,
+      lineHeight: theme.typography.lineHeight * theme.typography.sizes.base,
+      color: theme.colors.foreground,
+    },
+    caption: {
+      fontSize: theme.typography.sizes.sm,
+      fontWeight: theme.typography.fontWeight.normal,
+      lineHeight: theme.typography.lineHeight * theme.typography.sizes.sm,
+      color: theme.colors['muted-foreground'],
+    },
+    label: {
+      fontSize: theme.typography.sizes.xs,
+      fontWeight: theme.typography.fontWeight.medium,
+      lineHeight: theme.typography.lineHeight * theme.typography.sizes.xs,
+      color: theme.colors['muted-foreground'],
+      textTransform: 'uppercase',
+    },
+  };
+
   return (
     <Text
       style={[

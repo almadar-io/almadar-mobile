@@ -9,3 +9,6 @@ export type { NavigationOptions } from './useNavigation';
 
 export { useKeyboard, useKeyboardHeight } from './useKeyboard';
 export type { KeyboardState } from './useKeyboard';
+
+// Theme hooks
+export { useThemeStyles, useThemeValue } from './useThemeStyles';

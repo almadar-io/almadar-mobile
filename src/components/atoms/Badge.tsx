@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, ViewStyle } from 'react-native';
+import { View, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import { useTheme } from '../../providers/ThemeContext';
 
 export type BadgeVariant = 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error';
 export type BadgeSize = 'sm' | 'md';
@@ -11,49 +12,100 @@ export interface BadgeProps {
   style?: ViewStyle;
 }
 
-const variantStyles: Record<BadgeVariant, { backgroundColor: string; color: string }> = {
-  default: { backgroundColor: '#f3f4f6', color: '#374151' },
-  primary: { backgroundColor: '#e0e7ff', color: '#4338ca' },
-  secondary: { backgroundColor: '#e2e8f0', color: '#475569' },
-  success: { backgroundColor: '#dcfce7', color: '#15803d' },
-  warning: { backgroundColor: '#fef3c7', color: '#b45309' },
-  error: { backgroundColor: '#fee2e2', color: '#b91c1c' },
-};
-
-const sizeStyles: Record<BadgeSize, { paddingHorizontal: number; paddingVertical: number; fontSize: number }> = {
-  sm: { paddingHorizontal: 8, paddingVertical: 2, fontSize: 12 },
-  md: { paddingHorizontal: 10, paddingVertical: 4, fontSize: 14 },
-};
-
 export const Badge: React.FC<BadgeProps> = ({
   children,
   variant = 'default',
   size = 'md',
   style,
 }) => {
-  const variantStyle = variantStyles[variant];
-  const sizeStyle = sizeStyles[size];
+  const theme = useTheme();
+
+  const variantStyles: Record<BadgeVariant, { container: ViewStyle; text: TextStyle }> = {
+    default: {
+      container: {
+        backgroundColor: theme.colors.secondary,
+      },
+      text: {
+        color: theme.colors['secondary-foreground'],
+      },
+    },
+    primary: {
+      container: {
+        backgroundColor: theme.colors.primary,
+      },
+      text: {
+        color: theme.colors['primary-foreground'],
+      },
+    },
+    secondary: {
+      container: {
+        backgroundColor: theme.colors['secondary-hover'],
+      },
+      text: {
+        color: theme.colors['secondary-foreground'],
+      },
+    },
+    success: {
+      container: {
+        backgroundColor: theme.colors.success,
+      },
+      text: {
+        color: theme.colors['success-foreground'],
+      },
+    },
+    warning: {
+      container: {
+        backgroundColor: theme.colors.warning,
+      },
+      text: {
+        color: theme.colors['warning-foreground'],
+      },
+    },
+    error: {
+      container: {
+        backgroundColor: theme.colors.error,
+      },
+      text: {
+        color: theme.colors['error-foreground'],
+      },
+    },
+  };
+
+  const sizeStyles: Record<BadgeSize, { container: ViewStyle; text: TextStyle }> = {
+    sm: {
+      container: {
+        paddingHorizontal: theme.spacing[2],
+        paddingVertical: theme.spacing[0.5],
+        borderRadius: theme.borderRadius.full,
+      },
+      text: {
+        fontSize: theme.typography.sizes.xs,
+      },
+    },
+    md: {
+      container: {
+        paddingHorizontal: theme.spacing[3],
+        paddingVertical: theme.spacing[1],
+        borderRadius: theme.borderRadius.full,
+      },
+      text: {
+        fontSize: theme.typography.sizes.sm,
+      },
+    },
+  };
+
+  const variant = variantStyles[variant];
+  const size = sizeStyles[size];
 
   return (
-    <View style={[
-      styles.badge,
-      { backgroundColor: variantStyle.backgroundColor },
-      { paddingHorizontal: sizeStyle.paddingHorizontal, paddingVertical: sizeStyle.paddingVertical },
-      style,
-    ]}>
-      <Text style={[
-        styles.text,
-        { color: variantStyle.color, fontSize: sizeStyle.fontSize },
-      ]}>
-        {children}
-      </Text>
+    <View style={[styles.badge, variant.container, size.container, style]}>
+      <Text style={[styles.text, variant.text, size.text]}>{children}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   badge: {
-    borderRadius: 9999,
     alignSelf: 'flex-start',
   },
   text: {

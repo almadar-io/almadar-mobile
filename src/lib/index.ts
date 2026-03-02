@@ -5,3 +5,7 @@ export { cn } from './cn';
 export { convertThemeToRN, defaultRNTheme } from './theme';
 export type { WebTheme } from './theme';
 // RNTheme is re-exported from providers - don't duplicate here
+
+// Theme exports
+export { almadarLight, almadarDark, defaultTheme } from '../themes';
+export type { Theme } from '../themes';

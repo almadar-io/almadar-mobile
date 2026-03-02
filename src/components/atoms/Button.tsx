@@ -5,119 +5,138 @@ import {
   StyleSheet, 
   ActivityIndicator,
   ViewStyle,
-  TextStyle,
-  TouchableOpacityProps 
+  TextStyle 
 } from 'react-native';
+import { useTheme } from '../../providers/ThemeContext';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'destructive';
-export type ButtonSize = 'sm' | 'md' | 'lg';
-
-export interface ButtonProps extends Omit<TouchableOpacityProps, 'onPress'> {
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-  isLoading?: boolean;
-  disabled?: boolean;
-  onPress: () => void;
+export interface ButtonProps {
+  onPress?: () => void;
   children: React.ReactNode;
+  variant?: 'default' | 'primary' | 'secondary' | 'ghost' | 'destructive';
+  size?: 'sm' | 'md' | 'lg';
+  disabled?: boolean;
+  isLoading?: boolean;
+  style?: ViewStyle;
+  textStyle?: TextStyle;
 }
 
-const variantStyles: Record<ButtonVariant, ViewStyle> = {
-  primary: {
-    backgroundColor: '#6366f1', // indigo-500
-  },
-  secondary: {
-    backgroundColor: '#e2e8f0', // slate-200
-  },
-  ghost: {
-    backgroundColor: 'transparent',
-  },
-  destructive: {
-    backgroundColor: '#ef4444', // red-500
-  },
-};
-
-const sizeStyles: Record<ButtonSize, ViewStyle> = {
-  sm: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 6,
-  },
-  md: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-  },
-  lg: {
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: 10,
-  },
-};
-
-const textStyles: Record<ButtonVariant, TextStyle> = {
-  primary: {
-    color: '#ffffff',
-  },
-  secondary: {
-    color: '#1e293b', // slate-800
-  },
-  ghost: {
-    color: '#6366f1', // indigo-500
-  },
-  destructive: {
-    color: '#ffffff',
-  },
-};
-
-const sizeTextStyles: Record<ButtonSize, TextStyle> = {
-  sm: {
-    fontSize: 14,
-  },
-  md: {
-    fontSize: 16,
-  },
-  lg: {
-    fontSize: 18,
-  },
-};
-
 export const Button: React.FC<ButtonProps> = ({
-  variant = 'primary',
-  size = 'md',
-  isLoading = false,
-  disabled = false,
   onPress,
   children,
+  variant = 'default',
+  size = 'md',
+  disabled = false,
+  isLoading = false,
   style,
-  ...touchableProps
+  textStyle,
 }) => {
-  const isDisabled = disabled || isLoading;
+  const theme = useTheme();
+
+  const getVariantStyles = (): { container: ViewStyle; text: TextStyle } => {
+    switch (variant) {
+      case 'primary':
+        return {
+          container: {
+            backgroundColor: theme.colors.primary,
+          },
+          text: {
+            color: theme.colors['primary-foreground'],
+          },
+        };
+      case 'secondary':
+        return {
+          container: {
+            backgroundColor: theme.colors.secondary,
+          },
+          text: {
+            color: theme.colors['secondary-foreground'],
+          },
+        };
+      case 'ghost':
+        return {
+          container: {
+            backgroundColor: 'transparent',
+          },
+          text: {
+            color: theme.colors.primary,
+          },
+        };
+      case 'destructive':
+        return {
+          container: {
+            backgroundColor: theme.colors.error,
+          },
+          text: {
+            color: theme.colors['error-foreground'],
+          },
+        };
+      default:
+        return {
+          container: {
+            backgroundColor: theme.colors.card,
+            borderWidth: 1,
+            borderColor: theme.colors.border,
+          },
+          text: {
+            color: theme.colors.foreground,
+          },
+        };
+    }
+  };
+
+  const sizeStyles: Record<string, { container: ViewStyle; text: TextStyle }> = {
+    sm: {
+      container: {
+        paddingVertical: theme.spacing[1],
+        paddingHorizontal: theme.spacing[3],
+        borderRadius: theme.borderRadius.md,
+      },
+      text: {
+        fontSize: theme.typography.sizes.sm,
+      },
+    },
+    md: {
+      container: {
+        paddingVertical: theme.spacing[2],
+        paddingHorizontal: theme.spacing[4],
+        borderRadius: theme.borderRadius.md,
+      },
+      text: {
+        fontSize: theme.typography.sizes.base,
+      },
+    },
+    lg: {
+      container: {
+        paddingVertical: theme.spacing[3],
+        paddingHorizontal: theme.spacing[6],
+        borderRadius: theme.borderRadius.lg,
+      },
+      text: {
+        fontSize: theme.typography.sizes.lg,
+      },
+    },
+  };
+
+  const variantStyle = getVariantStyles();
+  const sizeStyle = sizeStyles[size];
 
   return (
     <TouchableOpacity
+      onPress={onPress}
+      disabled={disabled || isLoading}
+      activeOpacity={0.8}
       style={[
-        styles.base,
-        variantStyles[variant],
-        sizeStyles[size],
-        isDisabled && styles.disabled,
+        styles.button,
+        variantStyle.container,
+        sizeStyle.container,
+        (disabled || isLoading) && { opacity: 0.5 },
         style,
       ]}
-      onPress={onPress}
-      disabled={isDisabled}
-      activeOpacity={0.8}
-      {...touchableProps}
     >
       {isLoading ? (
-        <ActivityIndicator 
-          color={textStyles[variant].color} 
-          size={size === 'sm' ? 'small' : 'small'}
-        />
+        <ActivityIndicator color={variantStyle.text.color} size="small" />
       ) : (
-        <Text style={[
-          styles.text,
-          textStyles[variant],
-          sizeTextStyles[size],
-        ]}>
+        <Text style={[styles.text, variantStyle.text, sizeStyle.text, textStyle]}>
           {children}
         </Text>
       )}
@@ -126,16 +145,12 @@ export const Button: React.FC<ButtonProps> = ({
 };
 
 const styles = StyleSheet.create({
-  base: {
+  button: {
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'row',
   },
   text: {
-    fontWeight: '600',
-  },
-  disabled: {
-    opacity: 0.5,
+    fontWeight: '500',
   },
 });
 

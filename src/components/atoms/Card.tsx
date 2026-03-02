@@ -1,42 +1,61 @@
 import React from 'react';
 import { View, StyleSheet, ViewStyle, TouchableOpacity } from 'react-native';
+import { useTheme } from '../../providers/ThemeContext';
 
 export interface CardProps {
   children: React.ReactNode;
   onPress?: () => void;
   style?: ViewStyle | ViewStyle[];
   padding?: 'none' | 'sm' | 'md' | 'lg';
+  variant?: 'default' | 'elevated' | 'outlined';
 }
-
-const paddingStyles: Record<string, ViewStyle> = {
-  none: { padding: 0 },
-  sm: { padding: 12 },
-  md: { padding: 16 },
-  lg: { padding: 24 },
-};
 
 export const Card: React.FC<CardProps> = ({
   children,
   onPress,
   style,
   padding = 'md',
+  variant = 'default',
 }) => {
+  const theme = useTheme();
+
+  const paddingStyles: Record<string, ViewStyle> = {
+    none: { padding: 0 },
+    sm: { padding: theme.spacing[3] },
+    md: { padding: theme.spacing[4] },
+    lg: { padding: theme.spacing[6] },
+  };
+
+  const variantStyles: Record<string, ViewStyle> = {
+    default: {
+      backgroundColor: theme.colors.card,
+      ...theme.shadows.main,
+    },
+    elevated: {
+      backgroundColor: theme.colors.card,
+      ...theme.shadows.lg,
+    },
+    outlined: {
+      backgroundColor: theme.colors.card,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      ...theme.shadows.none,
+    },
+  };
+
   const cardStyles: ViewStyle[] = [
     styles.card,
+    variantStyles[variant],
     paddingStyles[padding],
   ];
-  
+
   if (Array.isArray(style)) {
     cardStyles.push(...style);
   } else if (style) {
     cardStyles.push(style);
   }
 
-  const content = (
-    <View style={cardStyles}>
-      {children}
-    </View>
-  );
+  const content = <View style={cardStyles}>{children}</View>;
 
   if (onPress) {
     return (
@@ -51,15 +70,7 @@ export const Card: React.FC<CardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#ffffff',
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
   },
 });
 
