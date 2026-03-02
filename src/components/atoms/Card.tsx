@@ -1,13 +1,26 @@
 import React from 'react';
 import { View, StyleSheet, ViewStyle, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../providers/ThemeContext';
+import { useEventBus } from '../../hooks/useEventBus';
+import { LoadingState } from '../molecules/LoadingState';
+import { ErrorState } from '../molecules/ErrorState';
 
 export interface CardProps {
   children: React.ReactNode;
   onPress?: () => void;
-  style?: ViewStyle | ViewStyle[];
+  style?: ViewStyle | ViewStyle[] | undefined;
   padding?: 'none' | 'sm' | 'md' | 'lg';
   variant?: 'default' | 'elevated' | 'outlined';
+  /** Loading state indicator */
+  isLoading?: boolean;
+  /** Error state */
+  error?: Error | null;
+  /** Entity name for schema-driven auto-fetch */
+  entity?: string;
+  /** Declarative event name - emits UI:${action} via eventBus on press */
+  action?: string;
+  /** Payload to include with the action event */
+  actionPayload?: Record<string, unknown>;
 }
 
 export const Card: React.FC<CardProps> = ({
@@ -16,8 +29,36 @@ export const Card: React.FC<CardProps> = ({
   style,
   padding = 'md',
   variant = 'default',
+  isLoading,
+  error,
+  action,
+  actionPayload,
 }) => {
   const theme = useTheme();
+  const eventBus = useEventBus();
+
+  const handlePress = () => {
+    if (action) {
+      eventBus.emit(`UI:${action}`, actionPayload);
+    }
+    onPress?.();
+  };
+
+  if (isLoading) {
+    return (
+      <View style={[styles.card, style]}>
+        <LoadingState />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={[styles.card, style]}>
+        <ErrorState message={error.message} />
+      </View>
+    );
+  }
 
   const paddingStyles: Record<string, ViewStyle> = {
     none: { padding: 0 },
@@ -57,9 +98,9 @@ export const Card: React.FC<CardProps> = ({
 
   const content = <View style={cardStyles}>{children}</View>;
 
-  if (onPress) {
+  if (onPress || action) {
     return (
-      <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
+      <TouchableOpacity onPress={handlePress} activeOpacity={0.9}>
         {content}
       </TouchableOpacity>
     );

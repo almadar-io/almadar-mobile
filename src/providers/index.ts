@@ -2,6 +2,9 @@
 export { EventBusProvider } from './EventBusProvider';
 
 // RN-specific providers
-export { ThemeProvider, useTheme } from './ThemeProvider';
+export { ThemeProvider } from './ThemeProvider';
 export type { ThemeProviderProps } from './ThemeProvider';
+
+// Export from ThemeContext
+export { useTheme } from './ThemeContext';
 export type { RNTheme } from './ThemeContext';

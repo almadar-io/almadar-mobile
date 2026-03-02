@@ -1,11 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import { useColorScheme } from 'react-native';
-import { ThemeContext, RNTheme, defaultTheme } from './ThemeContext';
+import { ThemeContext, RNTheme } from './ThemeContext';
 import { almadarLight, almadarDark } from '../themes';
 
 export { RNTheme } from './ThemeContext';
 
-interface ThemeProviderProps {
+export interface ThemeProviderProps {
   children: React.ReactNode;
   theme?: 'light' | 'dark' | 'system';
   customTheme?: RNTheme;
@@ -17,7 +17,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   customTheme,
 }) => {
   const systemColorScheme = useColorScheme();
-  const [currentTheme, setCurrentTheme] = useState<RNTheme>(customTheme || defaultTheme);
+  // Theme state - currently using effectiveTheme memo instead
+  // const [currentTheme, setCurrentTheme] = useState<RNTheme>(customTheme || defaultTheme);
 
   // Determine effective theme based on setting and system
   const effectiveTheme = React.useMemo(() => {
@@ -30,9 +31,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     return theme === 'dark' ? almadarDark : almadarLight;
   }, [theme, systemColorScheme, customTheme]);
 
-  const setTheme = useCallback((newTheme: 'light' | 'dark') => {
-    setCurrentTheme(newTheme === 'dark' ? almadarDark : almadarLight);
-  }, []);
+
 
   const value = React.useMemo(() => effectiveTheme, [effectiveTheme]);
 

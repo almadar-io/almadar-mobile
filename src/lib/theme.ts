@@ -13,7 +13,7 @@ export interface WebTheme {
 /**
  * Convert web theme (CSS values) to React Native theme (numeric values)
  */
-export function convertThemeToRN(webTheme: WebTheme): RNTheme {
+export function convertThemeToRN(webTheme: WebTheme): Partial<RNTheme> {
   const spacing = convertSpacing(webTheme.spacing);
   const borderRadius = convertSpacing(webTheme.borderRadius);
   
@@ -28,60 +28,14 @@ export function convertThemeToRN(webTheme: WebTheme): RNTheme {
       ...spacing,
     },
     borderRadius: {
+      none: 0,
       sm: borderRadius.sm || 4,
       md: borderRadius.md || 8,
       lg: borderRadius.lg || 12,
       xl: borderRadius.xl || 16,
-      ...borderRadius,
+      full: 9999,
     },
-    button: {
-      variants: {
-        primary: {
-          backgroundColor: webTheme.colors.primary || '#6366f1',
-        },
-        secondary: {
-          backgroundColor: webTheme.colors.secondary || '#e2e8f0',
-        },
-        ghost: {
-          backgroundColor: 'transparent',
-        },
-        destructive: {
-          backgroundColor: webTheme.colors.destructive || '#ef4444',
-        },
-      },
-      sizes: {
-        sm: {
-          paddingVertical: 8,
-          paddingHorizontal: 12,
-          borderRadius: 6,
-        },
-        md: {
-          paddingVertical: 12,
-          paddingHorizontal: 16,
-          borderRadius: 8,
-        },
-        lg: {
-          paddingVertical: 16,
-          paddingHorizontal: 24,
-          borderRadius: 10,
-        },
-      },
-      text: {
-        primary: {
-          color: '#ffffff',
-        },
-        secondary: {
-          color: '#1e293b',
-        },
-        ghost: {
-          color: '#6366f1',
-        },
-        destructive: {
-          color: '#ffffff',
-        },
-      },
-    },
-  };
+  } as Partial<RNTheme>;
 }
 
 function convertSpacing(spacing: Record<string, string>): Record<string, number> {
@@ -93,7 +47,7 @@ function convertSpacing(spacing: Record<string, string>): Record<string, number>
   return result;
 }
 
-export const defaultRNTheme: RNTheme = {
+export const defaultRNTheme: Partial<RNTheme> = {
   colors: {
     primary: '#6366f1',
     secondary: '#e2e8f0',
@@ -105,7 +59,7 @@ export const defaultRNTheme: RNTheme = {
     border: '#e2e8f0',
     card: '#ffffff',
     'card-foreground': '#0f172a',
-  },
+  } as never,
   spacing: {
     xs: 4,
     sm: 8,
@@ -114,56 +68,11 @@ export const defaultRNTheme: RNTheme = {
     xl: 32,
   },
   borderRadius: {
+    none: 0,
     sm: 4,
     md: 8,
     lg: 12,
     xl: 16,
-  },
-  button: {
-    variants: {
-      primary: {
-        backgroundColor: '#6366f1',
-      },
-      secondary: {
-        backgroundColor: '#e2e8f0',
-      },
-      ghost: {
-        backgroundColor: 'transparent',
-      },
-      destructive: {
-        backgroundColor: '#ef4444',
-      },
-    },
-    sizes: {
-      sm: {
-        paddingVertical: 8,
-        paddingHorizontal: 12,
-        borderRadius: 6,
-      },
-      md: {
-        paddingVertical: 12,
-        paddingHorizontal: 16,
-        borderRadius: 8,
-      },
-      lg: {
-        paddingVertical: 16,
-        paddingHorizontal: 24,
-        borderRadius: 10,
-      },
-    },
-    text: {
-      primary: {
-        color: '#ffffff',
-      },
-      secondary: {
-        color: '#1e293b',
-      },
-      ghost: {
-        color: '#6366f1',
-      },
-      destructive: {
-        color: '#ffffff',
-      },
-    },
+    full: 9999,
   },
 };

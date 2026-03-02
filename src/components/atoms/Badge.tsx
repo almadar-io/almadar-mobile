@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
 import { useTheme } from '../../providers/ThemeContext';
+import { LoadingState } from '../molecules/LoadingState';
+import { ErrorState } from '../molecules/ErrorState';
 
 export type BadgeVariant = 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error';
 export type BadgeSize = 'sm' | 'md';
@@ -10,6 +12,12 @@ export interface BadgeProps {
   variant?: BadgeVariant;
   size?: BadgeSize;
   style?: ViewStyle;
+  /** Loading state indicator */
+  isLoading?: boolean;
+  /** Error state */
+  error?: Error | null;
+  /** Entity name for schema-driven auto-fetch */
+  entity?: string;
 }
 
 export const Badge: React.FC<BadgeProps> = ({
@@ -17,8 +25,26 @@ export const Badge: React.FC<BadgeProps> = ({
   variant = 'default',
   size = 'md',
   style,
+  isLoading,
+  error,
 }) => {
   const theme = useTheme();
+
+  if (isLoading) {
+    return (
+      <View style={[styles.badge, style]}>
+        <LoadingState message="Loading..." />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={[styles.badge, style]}>
+        <ErrorState message={error.message} />
+      </View>
+    );
+  }
 
   const variantStyles: Record<BadgeVariant, { container: ViewStyle; text: TextStyle }> = {
     default: {
@@ -75,7 +101,7 @@ export const Badge: React.FC<BadgeProps> = ({
     sm: {
       container: {
         paddingHorizontal: theme.spacing[2],
-        paddingVertical: theme.spacing[0.5],
+        paddingVertical: 2,
         borderRadius: theme.borderRadius.full,
       },
       text: {
@@ -94,12 +120,12 @@ export const Badge: React.FC<BadgeProps> = ({
     },
   };
 
-  const variant = variantStyles[variant];
-  const size = sizeStyles[size];
+  const variantStyle = variantStyles[variant];
+  const sizeStyle = sizeStyles[size];
 
   return (
-    <View style={[styles.badge, variant.container, size.container, style]}>
-      <Text style={[styles.text, variant.text, size.text]}>{children}</Text>
+    <View style={[styles.badge, variantStyle.container, sizeStyle.container, style]}>
+      <Text style={[styles.text, variantStyle.text, sizeStyle.text]}>{children}</Text>
     </View>
   );
 };

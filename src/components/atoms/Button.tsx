@@ -8,6 +8,7 @@ import {
   TextStyle 
 } from 'react-native';
 import { useTheme } from '../../providers/ThemeContext';
+import { useEventBus } from '../../hooks/useEventBus';
 
 export interface ButtonProps {
   onPress?: () => void;
@@ -18,6 +19,12 @@ export interface ButtonProps {
   isLoading?: boolean;
   style?: ViewStyle;
   textStyle?: TextStyle;
+  /** Declarative event name - emits UI:${action} via eventBus on press */
+  action?: string;
+  /** Payload to include with the action event */
+  actionPayload?: Record<string, unknown>;
+  /** Entity name for schema-driven auto-fetch */
+  entity?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -29,8 +36,18 @@ export const Button: React.FC<ButtonProps> = ({
   isLoading = false,
   style,
   textStyle,
+  action,
+  actionPayload,
 }) => {
   const theme = useTheme();
+  const eventBus = useEventBus();
+
+  const handlePress = () => {
+    if (action) {
+      eventBus.emit(`UI:${action}`, actionPayload);
+    }
+    onPress?.();
+  };
 
   const getVariantStyles = (): { container: ViewStyle; text: TextStyle } => {
     switch (variant) {
@@ -122,7 +139,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   return (
     <TouchableOpacity
-      onPress={onPress}
+      onPress={handlePress}
       disabled={disabled || isLoading}
       activeOpacity={0.8}
       style={[
