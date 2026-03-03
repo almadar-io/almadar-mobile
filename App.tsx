@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { ThemeProvider } from './src/providers/ThemeProvider';
 
-// Main App component
+// Main App component - shown when STORYBOOK_ENABLED is not set
 function MainApp() {
   return (
     <ThemeProvider>
@@ -45,14 +45,14 @@ const styles = StyleSheet.create({
   },
 });
 
-// Conditionally export Storybook or App
+// Check if Storybook mode is enabled
 // @ts-ignore - process.env is handled by Metro
 const SHOW_STORYBOOK = process.env.STORYBOOK_ENABLED === 'true';
 
 let ExportedApp: React.FC = MainApp;
 
 if (SHOW_STORYBOOK) {
-  // Dynamic import for Storybook to avoid bundling when not needed
+  // Import Storybook UI when enabled
   const Storybook = require('./.storybook').default;
   ExportedApp = Storybook;
 }
