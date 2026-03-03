@@ -46,8 +46,8 @@ const styles = StyleSheet.create({
 });
 
 // Check if Storybook mode is enabled
-// @ts-ignore - process.env is handled by Metro
-const SHOW_STORYBOOK = process.env.STORYBOOK_ENABLED === 'true';
+// EXPO_PUBLIC_* vars are automatically inlined by Expo SDK 49+ without any babel plugin
+const SHOW_STORYBOOK = process.env.EXPO_PUBLIC_STORYBOOK === 'true';
 
 let ExportedApp: React.FC = MainApp;
 

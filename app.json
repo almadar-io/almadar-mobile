@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor":="#0f172a"
+      "backgroundColor": "#0f172a"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -32,6 +32,5 @@
       "tsconfigPaths": true
     },
     "plugins": []
-  }
   }
 }
