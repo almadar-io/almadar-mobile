@@ -70,7 +70,7 @@ export const DialogueBox: React.FC<DialogueBoxProps> = ({
   const [selectedChoice, setSelectedChoice] = useState(0);
   const textRef = useRef(dialogue.text);
   const charIndexRef = useRef(0);
-  const autoAdvanceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const autoAdvanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Reset when dialogue changes
   useEffect(() => {

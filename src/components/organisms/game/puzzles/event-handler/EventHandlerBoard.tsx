@@ -105,7 +105,7 @@ export const EventHandlerBoard: React.FC<EventHandlerBoardProps> = ({
   const [playState, setPlayState] = useState<PlayState>('editing');
   const [eventLog, setEventLog] = useState<EventLogEntry[]>([]);
   const [attempts, setAttempts] = useState(0);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const logIdCounter = useRef(0);
 
   useEffect(() => () => {
