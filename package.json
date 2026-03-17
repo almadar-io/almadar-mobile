@@ -61,9 +61,9 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@almadar/core": "2.6.0",
-    "@almadar/patterns": "2.8.0",
-    "@almadar/ui": "2.14.0",
+    "@almadar/core": ">=2.1.0",
+    "@almadar/patterns": ">=2.0.0",
+    "@almadar/ui": ">=2.1.0",
     "@react-native-async-storage/async-storage": "2.2.0",
     "expo-status-bar": "~2.2.3",
     "react-native-is-edge-to-edge": "^1.1.6",
@@ -103,7 +103,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/almadar-io/almadar.git",
+    "url": "https://github.com/almadar-io/almadar-mobile.git",
     "directory": "packages/almadar-mobile"
   },
   "packageManager": "pnpm@9.15.9"
