@@ -133,6 +133,48 @@ export type {
 export { RepeatableFormSection } from './RepeatableFormSection';
 export type { RepeatableFormSectionProps, RepeatableItem } from './RepeatableFormSection';
 
+export { NumberStepper } from './NumberStepper';
+export type { NumberStepperProps } from './NumberStepper';
+
+// Rating
+export { StarRating } from './StarRating';
+export type { StarRatingProps, StarRatingPrecision } from './StarRating';
+
+// Disclosure
+export { Accordion } from './Accordion';
+export type { AccordionProps, AccordionItem } from './Accordion';
+
+// Data display
+export { DataList } from './DataList';
+export type { DataListProps, DataListField, DataListItemAction } from './DataList';
+
+export { DataGrid } from './DataGrid';
+export type { DataGridProps, DataGridField, DataGridItemAction } from './DataGrid';
+
+export { Carousel } from './Carousel';
+export type { CarouselProps } from './Carousel';
+
+export { FlipCard } from './FlipCard';
+export type { FlipCardProps } from './FlipCard';
+
+// Scroll / gesture
+export { PullToRefresh } from './PullToRefresh';
+export type { PullToRefreshProps } from './PullToRefresh';
+
+export { SwipeableRow } from './SwipeableRow';
+export type { SwipeableRowProps, SwipeAction } from './SwipeableRow';
+
+export { SortableList } from './SortableList';
+export type { SortableListProps, DragHandlePosition } from './SortableList';
+
+// Calendar
+export { CalendarGrid } from './CalendarGrid';
+export type { CalendarGridProps, CalendarEvent } from './CalendarGrid';
+
+// Media
+export { Lightbox } from './Lightbox';
+export type { LightboxProps, LightboxImage } from './Lightbox';
+
 // Diagram components
 export { ScaledDiagram } from './ScaledDiagram';
 export type { ScaledDiagramProps } from './ScaledDiagram';

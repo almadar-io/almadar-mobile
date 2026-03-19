@@ -3,9 +3,10 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     globals: true,
-    environment: 'node',
-    include: ['src/**/*.test.ts'],
-    exclude: ['src/**/*.test.tsx', 'node_modules', 'dist'],
+    environment: 'jsdom',
+    include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
+    exclude: ['node_modules', 'dist'],
+    setupFiles: [],
   },
   resolve: {
     alias: {

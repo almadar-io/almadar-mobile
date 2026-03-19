@@ -68,13 +68,43 @@ export type { SpacerProps, SpacerSize } from './Spacer';
 export { ConditionalWrapper } from './ConditionalWrapper';
 export type { ConditionalWrapperProps, ConditionalContext } from './ConditionalWrapper';
 
+// Status & indicators
+export { StatusDot } from './StatusDot';
+export type { StatusDotProps, StatusDotStatus, StatusDotSize } from './StatusDot';
+
+export { TrendIndicator } from './TrendIndicator';
+export type { TrendIndicatorProps, TrendDirection, TrendSize } from './TrendIndicator';
+
+export { TextHighlight } from './TextHighlight';
+export type { TextHighlightProps, HighlightType } from './TextHighlight';
+
+export { AnimatedCounter } from './AnimatedCounter';
+export type { AnimatedCounterProps } from './AnimatedCounter';
+
+export { TypewriterText } from './TypewriterText';
+export type { TypewriterTextProps } from './TypewriterText';
+
+// Calendar
+export { DayCell } from './DayCell';
+export type { DayCellProps } from './DayCell';
+
+// Controls
+export { ThemeToggle } from './ThemeToggle';
+export type { ThemeToggleProps, ThemeToggleSize } from './ThemeToggle';
+
+export { RangeSlider } from './RangeSlider';
+export type { RangeSliderProps } from './RangeSlider';
+
+export { InfiniteScrollSentinel } from './InfiniteScrollSentinel';
+export type { InfiniteScrollSentinelProps } from './InfiniteScrollSentinel';
+
 // Game components
 export { HealthBar, ControlButton, ScoreDisplay, Sprite, StateIndicator } from './game';
-export type { 
-  HealthBarProps, 
-  ControlButtonProps, 
-  ScoreDisplayProps, 
-  SpriteProps, 
+export type {
+  HealthBarProps,
+  ControlButtonProps,
+  ScoreDisplayProps,
+  SpriteProps,
   StateIndicatorProps,
   StateStyle,
 } from './game';
