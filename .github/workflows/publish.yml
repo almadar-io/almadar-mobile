@@ -14,20 +14,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: 'npm'
 
-      - run: pnpm install --no-frozen-lockfile
+      - run: npm ci
 
       - name: Build
-        run: pnpm build
+        run: npm run build
 
       - name: Publish
         run: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-          pnpm publish --access public --no-git-checks
+          npm publish --access public
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
