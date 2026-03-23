@@ -1,6 +1,6 @@
 {
   "name": "@almadar/mobile",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "React Native UI components for Almadar - extends @almadar/ui",
   "type": "module",
   "main": "index.js",
@@ -102,7 +102,7 @@
     "registry": "https://registry.npmjs.org",
     "access": "public"
   },
-  "license": "MIT",
+  "license": "BSL-1.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/almadar-io/almadar-mobile.git"
