@@ -1,6 +1,6 @@
 {
   "name": "@almadar/mobile",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "React Native UI components for Almadar - extends @almadar/ui",
   "type": "module",
   "main": "index.js",
