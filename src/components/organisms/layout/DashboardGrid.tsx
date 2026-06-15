@@ -7,14 +7,16 @@ import { VStack } from '../../atoms/Stack';
 import { LoadingState } from '../../molecules/LoadingState';
 import { ErrorState } from '../../molecules/ErrorState';
 import { EmptyState } from '../../molecules/EmptyState';
+import type { EventKey, EventPayload } from '../../../types';
+
 
 export interface Widget {
   id: string;
   title: string;
   component: React.ReactNode;
   span?: '1' | '2' | '3' | 'full';
-  action?: string;
-  actionPayload?: Record<string, unknown>;
+  action?: EventKey;
+  actionPayload?: EventPayload;
 }
 
 export interface DashboardGridProps {

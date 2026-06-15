@@ -5,14 +5,16 @@ import { useEventBus } from '../../hooks/useEventBus';
 import { Typography } from './Typography';
 import { HStack } from './Stack';
 import { VStack } from './Stack';
+import type { EventKey, EventPayload } from '../../types';
+
 
 export interface RangeSliderProps {
   min?: number;
   max?: number;
   value?: number;
   step?: number;
-  action?: string;
-  actionPayload?: Record<string, unknown>;
+  action?: EventKey;
+  actionPayload?: EventPayload;
   onChange?: (value: number) => void;
   showValue?: boolean;
   label?: string;

@@ -9,6 +9,8 @@ import { useTheme } from '../../providers/ThemeContext';
 import { useEventBus } from '../../hooks/useEventBus';
 import { Typography } from '../atoms/Typography';
 import { HStack } from '../atoms/Stack';
+import type { EventKey, EventPayload } from '../../types';
+
 
 export type ToastVariant = 'info' | 'success' | 'warning' | 'error';
 
@@ -18,12 +20,12 @@ export interface ToastProps {
   variant?: ToastVariant;
   duration?: number;
   onDismiss?: (id: string) => void;
-  dismissAction?: string;
+  dismissAction?: EventKey;
   style?: ViewStyle;
   /** Entity name for schema-driven auto-fetch */
   entity?: string;
   /** Payload for dismiss action */
-  actionPayload?: Record<string, unknown>;
+  actionPayload?: EventPayload;
 }
 
 export const Toast: React.FC<ToastProps> = ({

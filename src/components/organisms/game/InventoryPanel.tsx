@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { useTheme } from '../../../providers/ThemeContext';
 import { useEventBus } from '../../../hooks/useEventBus';
+import type { EventPayload } from '@almadar/core';
 import { Card } from '../../atoms/Card';
 import { Typography } from '../../atoms/Typography';
 
@@ -77,7 +78,7 @@ export const InventoryPanel: React.FC<InventoryPanelProps> = ({
     // Double tap detection
     if (lastTap && now - lastTap < 300 && item) {
       // Double tap - use item
-      if (useItemEvent) eventBus.emit(`UI:${useItemEvent}`, { item });
+      if (useItemEvent) eventBus.emit(`UI:${useItemEvent}`, { item } as unknown as EventPayload);
       onUseItem?.(item);
       setLastTap(null);
       return;
@@ -86,7 +87,7 @@ export const InventoryPanel: React.FC<InventoryPanelProps> = ({
     setLastTap(now);
     
     // Single tap - select slot
-    if (selectSlotEvent) eventBus.emit(`UI:${selectSlotEvent}`, { index });
+    if (selectSlotEvent) eventBus.emit(`UI:${selectSlotEvent}`, { index } as EventPayload);
     onSelectSlot?.(index);
   }, [lastTap, items, onSelectSlot, onUseItem, selectSlotEvent, useItemEvent, eventBus]);
 

@@ -12,6 +12,8 @@ import { BookChapterView } from './BookChapterView';
 import { BookCoverPage, BookCoverPageProps } from './BookCoverPage';
 import { BookNavBar } from './BookNavBar';
 import { BookTableOfContents, BookChapter } from './BookTableOfContents';
+import type { EventKey, EventPayload } from '../../../types';
+
 
 export interface BookViewerProps {
   /** Book metadata */
@@ -41,7 +43,7 @@ export interface BookViewerProps {
   /** Event emitted when book is closed */
   closeEvent?: string;
   /** Payload to include with events */
-  actionPayload?: Record<string, unknown>;
+  actionPayload?: EventPayload;
 }
 
 export const BookViewer: React.FC<BookViewerProps> = ({

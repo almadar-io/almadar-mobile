@@ -12,12 +12,14 @@ import { Typography } from '../atoms/Typography';
 import { LoadingState } from '../molecules/LoadingState';
 import { ErrorState } from '../molecules/ErrorState';
 import { HStack } from '../atoms/Stack';
+import type { EventKey, EventPayload } from '../../types';
+
 
 export interface HeaderAction {
   icon?: React.ReactNode;
   label?: string;
-  action?: string;
-  actionPayload?: Record<string, unknown>;
+  action?: EventKey;
+  actionPayload?: EventPayload;
   onPress?: () => void;
 }
 

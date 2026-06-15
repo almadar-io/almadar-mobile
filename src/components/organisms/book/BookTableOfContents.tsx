@@ -16,6 +16,8 @@ import { Icon } from '../../atoms/Icon';
 import { LoadingState } from '../../molecules/LoadingState';
 import { ErrorState } from '../../molecules/ErrorState';
 import { EmptyState } from '../../molecules/EmptyState';
+import type { EventKey, EventPayload } from '../../../types';
+
 
 export interface BookChapter {
   id: string;
@@ -44,7 +46,7 @@ export interface BookTableOfContentsProps {
   /** Event emitted when a chapter is selected */
   selectEvent?: string;
   /** Payload to include with events */
-  actionPayload?: Record<string, unknown>;
+  actionPayload?: EventPayload;
 }
 
 export const BookTableOfContents: React.FC<BookTableOfContentsProps> = ({

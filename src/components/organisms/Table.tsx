@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 import { useTheme } from '../../providers/ThemeContext';
 import { useEventBus } from '../../hooks/useEventBus';
+import type { EventPayload } from '@almadar/core';
 import { Card } from '../atoms/Card';
 import { Typography } from '../atoms/Typography';
 import { Checkbox } from '../atoms/Checkbox';
@@ -169,31 +170,31 @@ export const Table = <T extends Record<string, unknown>>({
         ? 'desc'
         : 'asc';
 
-    eventBus.emit('UI:SORT', { field: column, direction: newDirection });
+    eventBus.emit('UI:SORT', { field: column, direction: newDirection } as EventPayload);
   };
 
   const handleSelectAll = (checked: boolean) => {
     if (!selectable) return;
     if (checked) {
       const allIds = resolvedData.map((row) => String(row.id ?? ''));
-      eventBus.emit('UI:SELECT', { ids: allIds });
+      eventBus.emit('UI:SELECT', { ids: allIds } as EventPayload);
     } else {
-      eventBus.emit('UI:DESELECT', { ids: selectedRows });
+      eventBus.emit('UI:DESELECT', { ids: selectedRows } as EventPayload);
     }
   };
 
   const handleSelectRow = (rowKey: string, checked: boolean) => {
     if (!selectable) return;
     if (checked) {
-      eventBus.emit('UI:SELECT', { ids: [rowKey] });
+      eventBus.emit('UI:SELECT', { ids: [rowKey] } as EventPayload);
     } else {
-      eventBus.emit('UI:DESELECT', { ids: [rowKey] });
+      eventBus.emit('UI:DESELECT', { ids: [rowKey] } as EventPayload);
     }
   };
 
   const handleRowAction = (action: { event?: string }, row: T) => {
     if (action.event) {
-      eventBus.emit(`UI:${action.event}`, { row });
+      eventBus.emit(`UI:${action.event}`, { row } as EventPayload);
     }
   };
 

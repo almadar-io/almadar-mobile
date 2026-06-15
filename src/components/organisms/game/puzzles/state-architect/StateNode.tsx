@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import { useTheme } from '../../../../../providers/ThemeContext';
 import { useEventBus } from '../../../../../hooks/useEventBus';
+import type { EventPayload } from '@almadar/core';
 import { Card } from '../../../../atoms/Card';
 import { Badge } from '../../../../atoms/Badge';
 import { Typography } from '../../../../atoms/Typography';
@@ -98,17 +99,17 @@ export const StateNode: React.FC<StateNodeProps> = ({
   const typeStyle = colors[node.type];
 
   const handlePress = () => {
-    eventBus.emit('UI:STATE_NODE_PRESSED', { node });
+    eventBus.emit('UI:STATE_NODE_PRESSED', { node } as unknown as EventPayload);
     onPress?.(node);
   };
 
   const handleLongPress = () => {
-    eventBus.emit('UI:STATE_NODE_LONG_PRESSED', { node });
+    eventBus.emit('UI:STATE_NODE_LONG_PRESSED', { node } as unknown as EventPayload);
     onLongPress?.(node);
   };
 
   const handleDelete = () => {
-    eventBus.emit('UI:STATE_NODE_DELETED', { nodeId: node.id });
+    eventBus.emit('UI:STATE_NODE_DELETED', { nodeId: node.id } as EventPayload);
     onDelete?.(node.id);
   };
 

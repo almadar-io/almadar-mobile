@@ -2,6 +2,7 @@ import React from 'react';
 import { View, ScrollView, StyleSheet, ViewStyle, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../providers/ThemeContext';
 import { useEventBus } from '../../hooks/useEventBus';
+import type { EventPayload } from '@almadar/core';
 import { Card } from '../atoms/Card';
 import { Typography } from '../atoms/Typography';
 import { HStack, VStack } from '../atoms/Stack';
@@ -63,14 +64,14 @@ export const LayoutPatterns: React.FC<LayoutPatternsProps> = ({
 
   const handlePatternSelect = (patternId: string) => {
     if (selectEvent) {
-      eventBus.emit(`UI:${selectEvent}`, { patternId });
+      eventBus.emit(`UI:${selectEvent}`, { patternId } as EventPayload);
     }
     onPatternSelect?.(patternId);
   };
 
   const handleApplyPattern = (pattern: LayoutPattern) => {
     if (applyEvent) {
-      eventBus.emit(`UI:${applyEvent}`, { pattern });
+      eventBus.emit(`UI:${applyEvent}`, { pattern } as unknown as EventPayload);
     }
   };
 

@@ -11,6 +11,8 @@ import { Typography } from '../atoms/Typography';
 import { HStack } from '../atoms/Stack';
 import { LoadingState } from './LoadingState';
 import { ErrorState } from './ErrorState';
+import type { EventKey, EventPayload } from '../../types';
+
 
 export type AlertVariant = 'info' | 'success' | 'warning' | 'error';
 
@@ -20,7 +22,7 @@ export interface AlertProps {
   variant?: AlertVariant;
   dismissible?: boolean;
   onDismiss?: () => void;
-  dismissAction?: string;
+  dismissAction?: EventKey;
   style?: ViewStyle;
   /** Loading state indicator */
   isLoading?: boolean;
@@ -29,7 +31,7 @@ export interface AlertProps {
   /** Entity name for schema-driven auto-fetch */
   entity?: string;
   /** Payload for dismiss action */
-  actionPayload?: Record<string, unknown>;
+  actionPayload?: EventPayload;
 }
 
 export const Alert: React.FC<AlertProps> = ({

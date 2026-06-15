@@ -5,21 +5,15 @@ import { useEventBus } from '../../hooks/useEventBus';
 import { Toast, ToastVariant } from '../molecules/Toast';
 import { LoadingState } from '../molecules/LoadingState';
 import { ErrorState } from '../molecules/ErrorState';
+import type { BusEvent, BusEventListener, EventKey, EventPayload } from '../../types';
 
 export interface ToastItem {
   id: string;
   message: string;
   variant?: ToastVariant;
   duration?: number;
-  dismissAction?: string;
-  actionPayload?: Record<string, unknown>;
-}
-
-interface KFlowEvent {
-  type: string;
-  payload?: Record<string, unknown>;
-  timestamp: number;
-  source?: string;
+  dismissAction?: EventKey;
+  actionPayload?: EventPayload;
 }
 
 export interface ToastSlotProps {
@@ -33,11 +27,11 @@ export interface ToastSlotProps {
   /** Entity name for schema-driven auto-fetch */
   entity?: string;
   /** Event name to listen for show commands */
-  showEvent?: string;
+  showEvent?: EventKey;
   /** Event name to listen for dismiss commands */
-  dismissEvent?: string;
+  dismissEvent?: EventKey;
   /** Event name to listen for clear all commands */
-  clearEvent?: string;
+  clearEvent?: EventKey;
 }
 
 export const ToastSlot: React.FC<ToastSlotProps> = ({
@@ -76,17 +70,17 @@ export const ToastSlot: React.FC<ToastSlotProps> = ({
   }, []);
 
   useEffect(() => {
-    const handleShow = (event: KFlowEvent) => {
+    const handleShow: BusEventListener = (event) => {
       const payload = event.payload;
       if (!payload) return;
-      const showPayload = payload as ToastItem | { toast: ToastItem };
+      const showPayload = payload as unknown as ToastItem | { toast: ToastItem };
       showToast(showPayload);
     };
 
-    const handleDismiss = (event: KFlowEvent) => {
+    const handleDismiss: BusEventListener = (event) => {
       const payload = event.payload;
       if (!payload) return;
-      const dismissPayload = payload as { toastId: string } | { payload: string };
+      const dismissPayload = payload as unknown as { toastId: string } | { payload: string };
       const toastId = 'toastId' in dismissPayload 
         ? dismissPayload.toastId 
         : ('payload' in dismissPayload ? dismissPayload.payload : undefined);

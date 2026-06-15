@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import { useTheme } from '../../../../../providers/ThemeContext';
 import { useEventBus } from '../../../../../hooks/useEventBus';
+import type { EventPayload } from '@almadar/core';
 import { Card } from '../../../../atoms/Card';
 import { Badge } from '../../../../atoms/Badge';
 import { Typography } from '../../../../atoms/Typography';
@@ -125,20 +126,20 @@ export const ActionTile: React.FC<ActionTileProps> = ({
 
   const handlePress = () => {
     if (variant !== 'disabled') {
-      eventBus.emit('UI:ACTION_TILE_PRESSED', { id, name, params });
+      eventBus.emit('UI:ACTION_TILE_PRESSED', { id, name, params } as EventPayload);
       onPress?.();
     }
   };
 
   const handleLongPress = () => {
     if (variant !== 'disabled') {
-      eventBus.emit('UI:ACTION_TILE_LONG_PRESSED', { id, name });
+      eventBus.emit('UI:ACTION_TILE_LONG_PRESSED', { id, name } as EventPayload);
       onLongPress?.();
     }
   };
 
   const handleDelete = () => {
-    eventBus.emit('UI:ACTION_TILE_DELETED', { id });
+    eventBus.emit('UI:ACTION_TILE_DELETED', { id } as EventPayload);
     onDelete?.();
   };
 

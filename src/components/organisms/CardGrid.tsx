@@ -1,13 +1,14 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { LoadingState } from '../molecules/LoadingState';
+import type { EntityRow } from '../../types';
 import { EmptyState } from '../molecules/EmptyState';
 import { ErrorState } from '../molecules/ErrorState';
 
-export interface CardGridProps<T> {
-  entity: T[];
-  renderItem: (item: T) => React.ReactElement;
-  keyExtractor: (item: T) => string;
+export interface CardGridProps {
+  entity: readonly EntityRow[];
+  renderItem: (item: EntityRow) => React.ReactElement;
+  keyExtractor: (item: EntityRow) => string;
   isLoading?: boolean;
   isError?: boolean;
   onRetry?: () => void;
@@ -15,7 +16,7 @@ export interface CardGridProps<T> {
   columns?: number;
 }
 
-export function CardGrid<T>({
+export function CardGrid({
   entity,
   renderItem,
   keyExtractor,
@@ -24,7 +25,7 @@ export function CardGrid<T>({
   onRetry,
   emptyMessage = 'No items found',
   columns = 1,
-}: CardGridProps<T>) {
+}: CardGridProps) {
   if (isLoading) {
     return <LoadingState />;
   }

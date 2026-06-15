@@ -11,12 +11,13 @@ import {
 import { useTheme } from '../../providers/ThemeContext';
 import { useEventBus } from '../../hooks/useEventBus';
 import { Typography } from '../atoms/Typography';
+import type { EventKey, EventPayload } from '../../types';
 
 export interface SwipeAction {
   label: string;
-  event: string;
+  event: EventKey;
   color: string;
-  payload?: Record<string, unknown>;
+  payload?: EventPayload;
 }
 
 export interface SwipeableRowProps {

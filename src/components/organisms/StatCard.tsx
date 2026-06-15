@@ -11,6 +11,8 @@ import { Typography } from '../atoms/Typography';
 import { VStack } from '../atoms/Stack';
 import { LoadingState } from '../molecules/LoadingState';
 import { ErrorState } from '../molecules/ErrorState';
+import type { EventKey, EventPayload } from '../../types';
+
 
 export interface StatCardProps {
   title: string;
@@ -20,8 +22,8 @@ export interface StatCardProps {
   trend?: 'up' | 'down' | 'neutral';
   trendValue?: string;
   onPress?: () => void;
-  action?: string;
-  actionPayload?: Record<string, unknown>;
+  action?: EventKey;
+  actionPayload?: EventPayload;
   style?: ViewStyle;
   /** Loading state indicator */
   isLoading?: boolean;

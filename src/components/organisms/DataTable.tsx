@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import { useTheme } from '../../providers/ThemeContext';
 import { Typography } from '../atoms/Typography';
+import type { EntityRow } from '../../types';
 import { LoadingState } from '../molecules/LoadingState';
 import { ErrorState } from '../molecules/ErrorState';
 import { EmptyState } from '../molecules/EmptyState';
@@ -19,13 +20,9 @@ export interface DataColumn {
   flex?: number;
 }
 
-export interface DataRow {
-  [key: string]: React.ReactNode;
-}
-
 export interface DataTableProps {
   columns: DataColumn[];
-  entity: DataRow[];
+  entity: readonly EntityRow[];
   style?: ViewStyle;
   /** Loading state indicator */
   isLoading?: boolean;
@@ -117,10 +114,10 @@ export const DataTable: React.FC<DataTableProps> = ({
                 >
                   {typeof row[col.key] === 'string' ? (
                     <Typography variant="body" style={{ color: theme.colors.foreground }}>
-                      {row[col.key]}
+                      {row[col.key] as React.ReactNode}
                     </Typography>
                   ) : (
-                    row[col.key]
+                    (row[col.key] as React.ReactNode)
                   )}
                 </View>
               ))}

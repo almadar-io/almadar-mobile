@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { useTheme } from '../../../../../providers/ThemeContext';
 import { useEventBus } from '../../../../../hooks/useEventBus';
+import type { EventPayload } from '@almadar/core';
 import { Card } from '../../../../atoms/Card';
 import { Badge } from '../../../../atoms/Badge';
 import { Typography } from '../../../../atoms/Typography';
@@ -91,12 +92,12 @@ export const ActionPalette: React.FC<ActionPaletteProps> = ({
     : actions.filter((action) => action.category === selectedCategory);
 
   const handleCategoryPress = (category: ActionCategory | 'all') => {
-    eventBus.emit('UI:ACTION_CATEGORY_CHANGED', { category });
+    eventBus.emit('UI:ACTION_CATEGORY_CHANGED', { category } as EventPayload);
     onCategoryChange?.(category);
   };
 
   const handleActionPress = (action: ActionDefinition) => {
-    eventBus.emit('UI:ACTION_SELECTED', { action });
+    eventBus.emit('UI:ACTION_SELECTED', { action } as unknown as EventPayload);
     onActionSelect?.(action);
   };
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, ScrollView, StyleSheet, ViewStyle } from 'react-native';
 import { useTheme } from '../../../../../providers/ThemeContext';
 import { useEventBus } from '../../../../../hooks/useEventBus';
+import type { EventPayload } from '@almadar/core';
 import { Card } from '../../../../atoms/Card';
 import { Typography } from '../../../../atoms/Typography';
 import { HStack, VStack } from '../../../../atoms/Stack';
@@ -68,7 +69,7 @@ export const VariablePanel: React.FC<VariablePanelProps> = ({
 
   const handleVariableChange = (id: string, value: unknown) => {
     if (changeEvent) {
-      eventBus.emit(`UI:${changeEvent}`, { id, value });
+      eventBus.emit(`UI:${changeEvent}`, { id, value } as EventPayload);
     }
     onVariableChange?.(id, value);
   };
@@ -84,7 +85,7 @@ export const VariablePanel: React.FC<VariablePanelProps> = ({
     };
 
     if (addEvent) {
-      eventBus.emit(`UI:${addEvent}`, { variable: newVar });
+      eventBus.emit(`UI:${addEvent}`, { variable: newVar } as EventPayload);
     }
     onVariableAdd?.(newVar);
     setNewVariableName('');
@@ -92,7 +93,7 @@ export const VariablePanel: React.FC<VariablePanelProps> = ({
 
   const handleDeleteVariable = (id: string) => {
     if (deleteEvent) {
-      eventBus.emit(`UI:${deleteEvent}`, { id });
+      eventBus.emit(`UI:${deleteEvent}`, { id } as EventPayload);
     }
     onVariableDelete?.(id);
   };

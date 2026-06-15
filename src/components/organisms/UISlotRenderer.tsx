@@ -10,6 +10,7 @@ import { Button } from '../atoms/Button';
 import { LoadingState } from '../molecules/LoadingState';
 import { ErrorState } from '../molecules/ErrorState';
 import { EmptyState } from '../molecules/EmptyState';
+import type { BusEvent, BusEventListener, EventKey, EventPayload } from '../../types';
 
 export type UIComponentType = 
   | 'card'
@@ -35,13 +36,6 @@ export interface UISlot {
   metadata?: Record<string, unknown>;
 }
 
-interface KFlowEvent {
-  type: string;
-  payload?: Record<string, unknown>;
-  timestamp: number;
-  source?: string;
-}
-
 export interface UISlotRendererProps {
   style?: ViewStyle;
   /** Loading state indicator */
@@ -55,7 +49,7 @@ export interface UISlotRendererProps {
   /** Default slot content */
   defaultSlot?: UISlot;
   /** Event name to listen for slot updates */
-  slotEvent?: string;
+  slotEvent?: EventKey;
   /** Custom component renderers */
   customRenderers?: Record<string, React.FC<Record<string, unknown>>>;
 }
@@ -86,10 +80,10 @@ export const UISlotRenderer: React.FC<UISlotRendererProps> = ({
   }, []);
 
   useEffect(() => {
-    const handleUpdate = (event: KFlowEvent) => {
+    const handleUpdate: BusEventListener = (event) => {
       const payload = event.payload;
       if (!payload) return;
-      const slotPayload = payload as UISlot | { slot: UISlot };
+      const slotPayload = payload as unknown as UISlot | { slot: UISlot };
       handleSlotUpdate(slotPayload);
     };
 
@@ -106,13 +100,14 @@ export const UISlotRenderer: React.FC<UISlotRendererProps> = ({
     };
   }, [eventBus, slotEvent, handleSlotUpdate, handleClearSlot]);
 
-  const handleComponentEvent = useCallback((componentId: string, eventName: string, payload?: Record<string, unknown>) => {
-    eventBus.emit(`UI:${eventName}`, {
+  const handleComponentEvent = useCallback((componentId: string, eventName: EventKey, payload?: EventPayload) => {
+    const emitPayload: EventPayload = {
       slotId: slot?.id,
       componentId,
       entity,
       ...payload,
-    });
+    };
+    eventBus.emit(`UI:${eventName}`, emitPayload);
   }, [slot, entity, eventBus]);
 
   const renderComponent = useCallback((config: UIComponentConfig): React.ReactNode => {
@@ -123,7 +118,7 @@ export const UISlotRenderer: React.FC<UISlotRendererProps> = ({
         <CustomRenderer
           key={config.id}
           {...config.props}
-          onEvent={(eventName: string, payload: Record<string, unknown>) => handleComponentEvent(config.id, eventName, payload)}
+          onEvent={(eventName: EventKey, payload: EventPayload) => handleComponentEvent(config.id, eventName, payload)}
         />
       );
     }

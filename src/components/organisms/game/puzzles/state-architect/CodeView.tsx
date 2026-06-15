@@ -2,6 +2,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, ViewStyle } from 'react-native';
 import { useTheme } from '../../../../../providers/ThemeContext';
 import { useEventBus } from '../../../../../hooks/useEventBus';
+import type { EventPayload } from '@almadar/core';
 import { Card } from '../../../../atoms/Card';
 import { Typography } from '../../../../atoms/Typography';
 import { HStack, VStack } from '../../../../atoms/Stack';
@@ -70,27 +71,27 @@ export const CodeView: React.FC<CodeViewProps> = ({
 
   const handleSectionSelect = (sectionId: string) => {
     if (sectionSelectEvent) {
-      eventBus.emit(`UI:${sectionSelectEvent}`, { sectionId });
+      eventBus.emit(`UI:${sectionSelectEvent}`, { sectionId } as EventPayload);
     }
   };
 
   const handleRun = () => {
     if (runEvent) {
-      eventBus.emit(`UI:${runEvent}`, { sections, fullCode });
+      eventBus.emit(`UI:${runEvent}`, { sections, fullCode } as unknown as EventPayload);
     }
   };
 
   const handleCopy = () => {
     const codeToCopy = activeTab === 'full' && fullCode ? fullCode : getAllSectionsCode();
     if (copyEvent) {
-      eventBus.emit(`UI:${copyEvent}`, { code: codeToCopy, language });
+      eventBus.emit(`UI:${copyEvent}`, { code: codeToCopy, language } as EventPayload);
     }
   };
 
   const handleExport = () => {
     const codeToExport = activeTab === 'full' && fullCode ? fullCode : getAllSectionsCode();
     if (exportEvent) {
-      eventBus.emit(`UI:${exportEvent}`, { code: codeToExport, language, componentName });
+      eventBus.emit(`UI:${exportEvent}`, { code: codeToExport, language, componentName } as EventPayload);
     }
   };
 

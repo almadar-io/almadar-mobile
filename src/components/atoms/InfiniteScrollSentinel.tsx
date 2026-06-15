@@ -4,10 +4,11 @@ import { useEventBus } from '../../hooks/useEventBus';
 import { Spinner } from './Spinner';
 import { Typography } from './Typography';
 import { useTheme } from '../../providers/ThemeContext';
+import type { EventKey, EventPayload } from '../../types';
 
 export interface InfiniteScrollSentinelProps {
-  loadMoreEvent?: string;
-  loadMorePayload?: Record<string, unknown>;
+  loadMoreEvent?: EventKey;
+  loadMorePayload?: EventPayload;
   isLoading?: boolean;
   hasMore?: boolean;
   onLoadMore?: () => void;

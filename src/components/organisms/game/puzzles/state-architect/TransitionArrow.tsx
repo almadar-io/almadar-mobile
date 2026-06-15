@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { useTheme } from '../../../../../providers/ThemeContext';
 import { useEventBus } from '../../../../../hooks/useEventBus';
+import type { EventPayload } from '@almadar/core';
 import { Card } from '../../../../atoms/Card';
 import { Badge } from '../../../../atoms/Badge';
 import { Typography } from '../../../../atoms/Typography';
@@ -101,12 +102,12 @@ export const TransitionArrow: React.FC<TransitionArrowProps> = ({
   const typeStyle = colors[transition.type];
 
   const handlePress = () => {
-    eventBus.emit('UI:TRANSITION_PRESSED', { transition });
+    eventBus.emit('UI:TRANSITION_PRESSED', { transition } as unknown as EventPayload);
     onPress?.(transition);
   };
 
   const handleDelete = () => {
-    eventBus.emit('UI:TRANSITION_DELETED', { transitionId: transition.id });
+    eventBus.emit('UI:TRANSITION_DELETED', { transitionId: transition.id } as EventPayload);
     onDelete?.(transition.id);
   };
 

@@ -7,7 +7,7 @@ export default defineConfig({
     'src/components/atoms/index.ts',
     'src/components/molecules/index.ts',
     'src/components/organisms/index.ts',
-    // 'src/components/templates/index.ts',  // Will be added when implemented
+    'src/components/templates/index.ts',
     'src/hooks/index.ts',
     'src/providers/index.ts',
     'src/lib/index.ts',

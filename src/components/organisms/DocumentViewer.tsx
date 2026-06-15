@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useTheme } from '../../providers/ThemeContext';
 import { useEventBus } from '../../hooks/useEventBus';
+import type { EventPayload } from '@almadar/core';
 import { Card } from '../atoms/Card';
 import { Typography } from '../atoms/Typography';
 import { HStack, VStack } from '../atoms/Stack';
@@ -68,14 +69,14 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
 
   const handleDocumentSelect = (documentId: string) => {
     if (selectEvent) {
-      eventBus.emit(`UI:${selectEvent}`, { documentId });
+      eventBus.emit(`UI:${selectEvent}`, { documentId } as EventPayload);
     }
     onDocumentSelect?.(documentId);
   };
 
   const handleDownload = (document: Document) => {
     if (downloadEvent) {
-      eventBus.emit(`UI:${downloadEvent}`, { document });
+      eventBus.emit(`UI:${downloadEvent}`, { document } as unknown as EventPayload);
     }
   };
 

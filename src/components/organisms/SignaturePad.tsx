@@ -9,6 +9,7 @@ import {
 
 import { useTheme } from '../../providers/ThemeContext';
 import { useEventBus } from '../../hooks/useEventBus';
+import type { EventPayload } from '@almadar/core';
 import { Card } from '../atoms/Card';
 import { Typography } from '../atoms/Typography';
 import { Button } from '../atoms/Button';
@@ -104,7 +105,7 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({
   const handleClear = useCallback(() => {
     setStrokes([]);
     setCurrentStroke([]);
-    eventBus.emit('UI:SIGNATURE_CLEAR', { entity });
+    eventBus.emit('UI:SIGNATURE_CLEAR', { entity } as EventPayload);
   }, [entity, eventBus]);
 
   const handleSave = useCallback(() => {
@@ -122,7 +123,7 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({
     eventBus.emit(`UI:${saveAction}`, {
       entity,
       signature: signatureData,
-    });
+    } as unknown as EventPayload);
 
     onSave?.(signatureData);
   }, [strokes, currentStroke, entity, saveAction, onSave, eventBus]);

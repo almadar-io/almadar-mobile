@@ -4,6 +4,8 @@ import { useTheme } from '../../providers/ThemeContext';
 import { useEventBus } from '../../hooks/useEventBus';
 import { LoadingState } from '../molecules/LoadingState';
 import { ErrorState } from '../molecules/ErrorState';
+import type { EventKey, EventPayload } from '../../types';
+
 
 export interface CardProps {
   children: React.ReactNode;
@@ -18,9 +20,9 @@ export interface CardProps {
   /** Entity name for schema-driven auto-fetch */
   entity?: string;
   /** Declarative event name - emits UI:${action} via eventBus on press */
-  action?: string;
+  action?: EventKey;
   /** Payload to include with the action event */
-  actionPayload?: Record<string, unknown>;
+  actionPayload?: EventPayload;
 }
 
 export const Card: React.FC<CardProps> = ({

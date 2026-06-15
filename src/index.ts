@@ -12,6 +12,9 @@ export * from './hooks';
 // Re-export utilities (mostly from @almadar/ui)
 export * from './lib';
 
+// Re-export canonical Almadar types
+export * from './types';
+
 // Re-export providers
 export * from './providers';
 

@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import { useTheme } from '../../providers/ThemeContext';
 import { useEventBus } from '../../hooks/useEventBus';
+import type { EventKey, EventPayload } from '../../types';
+
 
 export interface ButtonProps {
   onPress?: () => void;
@@ -20,9 +22,9 @@ export interface ButtonProps {
   style?: ViewStyle;
   textStyle?: TextStyle;
   /** Declarative event name - emits UI:${action} via eventBus on press */
-  action?: string;
+  action?: EventKey;
   /** Payload to include with the action event */
-  actionPayload?: Record<string, unknown>;
+  actionPayload?: EventPayload;
   /** Entity name for schema-driven auto-fetch */
   entity?: string;
 }

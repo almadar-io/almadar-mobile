@@ -7,13 +7,14 @@ import { Button } from '../atoms/Button';
 import { HStack } from '../atoms/Stack';
 import { LoadingState } from '../molecules/LoadingState';
 import { ErrorState } from '../molecules/ErrorState';
+import type { BusEvent, BusEventListener, EventKey, EventPayload } from '../../types';
 
 export interface ModalAction {
   label: string;
-  event?: string;
+  event?: EventKey;
   navigatesTo?: string;
   variant?: 'default' | 'primary' | 'secondary' | 'ghost' | 'destructive';
-  payload?: Record<string, unknown>;
+  payload?: EventPayload;
 }
 
 export interface ModalContent {
@@ -24,13 +25,6 @@ export interface ModalContent {
   size?: 'sm' | 'md' | 'lg';
   closeOnBackdrop?: boolean;
   showCloseButton?: boolean;
-}
-
-interface KFlowEvent {
-  type: string;
-  payload?: Record<string, unknown>;
-  timestamp: number;
-  source?: string;
 }
 
 export interface ModalSlotProps {
@@ -44,9 +38,9 @@ export interface ModalSlotProps {
   /** Default size for modals */
   defaultSize?: 'sm' | 'md' | 'lg';
   /** Event name to listen for open commands */
-  openEvent?: string;
+  openEvent?: EventKey;
   /** Event name to listen for close commands */
-  closeEvent?: string;
+  closeEvent?: EventKey;
 }
 
 export const ModalSlot: React.FC<ModalSlotProps> = ({
@@ -90,10 +84,10 @@ export const ModalSlot: React.FC<ModalSlotProps> = ({
   }, []);
 
   useEffect(() => {
-    const handleOpen = (event: KFlowEvent) => {
+    const handleOpen: BusEventListener = (event) => {
       const payload = event.payload;
       if (!payload) return;
-      const modalPayload = payload as ModalContent | { modal: ModalContent };
+      const modalPayload = payload as unknown as ModalContent | { modal: ModalContent };
       const modal = 'modal' in modalPayload ? modalPayload.modal : modalPayload;
       openModal({
         ...modal,
@@ -101,7 +95,7 @@ export const ModalSlot: React.FC<ModalSlotProps> = ({
       });
     };
 
-    const handleClose = (event: KFlowEvent) => {
+    const handleClose: BusEventListener = (event) => {
       const payload = event.payload;
       const closePayload = payload as { modalId?: string; all?: boolean } | undefined;
       if (closePayload?.all) {

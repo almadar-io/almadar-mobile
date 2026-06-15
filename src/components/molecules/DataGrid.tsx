@@ -10,6 +10,7 @@ import { FlatList, View, Image, Pressable, StyleSheet, ViewStyle, Dimensions } f
 import { useTheme } from '../../providers/ThemeContext';
 import { useEventBus } from '../../hooks/useEventBus';
 import { getNestedValue } from '../../lib/getNestedValue';
+import type { EntityRow, EventKey, EventPayload } from '../../types';
 import { Typography } from '../atoms/Typography';
 import { Badge } from '../atoms/Badge';
 import { Button } from '../atoms/Button';
@@ -35,7 +36,7 @@ export interface DataGridField {
 
 export interface DataGridItemAction {
   label: string;
-  event: string;
+  event: EventKey;
   icon?: string;
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
 }
@@ -43,7 +44,7 @@ export interface DataGridItemAction {
 // ── Props ────────────────────────────────────────────────────────────
 
 export interface DataGridProps {
-  entity: unknown | readonly unknown[];
+  entity: readonly EntityRow[];
   fields: readonly DataGridField[];
   columns?: readonly DataGridField[];
   itemActions?: readonly DataGridItemAction[];
@@ -54,11 +55,11 @@ export interface DataGridProps {
   error?: Error | null;
   imageField?: string;
   selectable?: boolean;
-  selectionEvent?: string;
+  selectionEvent?: EventKey;
   infiniteScroll?: boolean;
-  loadMoreEvent?: string;
+  loadMoreEvent?: EventKey;
   hasMore?: boolean;
-  children?: (item: Record<string, unknown>, index: number) => React.ReactNode;
+  children?: (item: EntityRow, index: number) => React.ReactNode;
   pageSize?: number;
 }
 
@@ -130,7 +131,7 @@ export const DataGrid: React.FC<DataGridProps> = ({
   const [visibleCount, setVisibleCount] = useState(pageSize || Infinity);
 
   const fields = fieldsProp ?? columnsProp ?? [];
-  const allData: Record<string, unknown>[] = (Array.isArray(entity) ? entity : entity ? [entity] : []) as Record<string, unknown>[];
+  const allData: EntityRow[] = [...entity];
   const data = pageSize > 0 ? allData.slice(0, visibleCount) : allData;
   const hasMoreLocal = pageSize > 0 && visibleCount < allData.length;
 
@@ -147,7 +148,8 @@ export const DataGrid: React.FC<DataGridProps> = ({
       if (next.has(id)) next.delete(id);
       else next.add(id);
       if (selectionEvent) {
-        eventBus.emit(`UI:${selectionEvent}`, { selectedIds: Array.from(next) });
+        const payload: EventPayload = { selectedIds: Array.from(next) };
+        eventBus.emit(`UI:${selectionEvent}`, payload);
       }
       return next;
     });
@@ -162,11 +164,12 @@ export const DataGrid: React.FC<DataGridProps> = ({
   const gapSize = gapValues[gap];
   const cardWidth = (screenWidth - gapSize * (cols + 1)) / cols;
 
-  const handleAction = (action: DataGridItemAction, itemData: Record<string, unknown>) => {
-    eventBus.emit(`UI:${action.event}`, { id: itemData.id, row: itemData });
+  const handleAction = (action: DataGridItemAction, itemData: EntityRow) => {
+    const payload: EventPayload = { id: itemData.id, row: itemData };
+    eventBus.emit(`UI:${action.event}`, payload);
   };
 
-  const renderCard = ({ item: itemData, index }: { item: Record<string, unknown>; index: number }) => {
+  const renderCard = ({ item: itemData, index }: { item: EntityRow; index: number }) => {
     const id = String(itemData.id ?? index);
     const isSelected = selectedIds.has(id);
 

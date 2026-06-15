@@ -21,6 +21,8 @@ import { VStack, HStack } from '../atoms/Stack';
 import { LoadingState } from './LoadingState';
 import { ErrorState } from './ErrorState';
 import { EmptyState } from './EmptyState';
+import type { EventKey, EventPayload } from '../../types';
+
 
 export interface RelationOption {
   id: string;
@@ -51,11 +53,11 @@ export interface RelationSelectProps {
   /** Maximum number of selections (for multiple mode) */
   maxSelections?: number;
   /** Event name to emit on selection change - emits UI:${changeEvent} */
-  changeEvent?: string;
+  changeEvent?: EventKey;
   /** Event name to emit on search - emits UI:${searchEvent} */
   searchEvent?: string;
   /** Payload base to include with events */
-  actionPayload?: Record<string, unknown>;
+  actionPayload?: EventPayload;
 }
 
 export const RelationSelect: React.FC<RelationSelectProps> = ({

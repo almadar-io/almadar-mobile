@@ -6,6 +6,8 @@ import { Typography } from '../../atoms/Typography';
 import { VStack } from '../../atoms/Stack';
 import { LoadingState } from '../../molecules/LoadingState';
 import { ErrorState } from '../../molecules/ErrorState';
+import type { EventKey, EventPayload } from '../../../types';
+
 
 export interface BookChapterViewProps {
   /** Chapter title */
@@ -27,7 +29,7 @@ export interface BookChapterViewProps {
   /** Event emitted when chapter is viewed */
   viewEvent?: string;
   /** Payload to include with events */
-  actionPayload?: Record<string, unknown>;
+  actionPayload?: EventPayload;
 }
 
 export const BookChapterView: React.FC<BookChapterViewProps> = ({

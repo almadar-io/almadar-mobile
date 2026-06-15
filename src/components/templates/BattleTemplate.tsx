@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import { useTheme } from '../../providers/ThemeContext';
 import { useEventBus } from '../../hooks/useEventBus';
+import type { EventPayload } from '@almadar/core';
 import { BattleBoard, BattleBoardProps } from '../organisms/game/BattleBoard';
 import { GameHud, GameHudStat } from '../organisms/game/GameHud';
 import { GameMenu, MenuOption } from '../organisms/game/GameMenu';
@@ -58,21 +59,21 @@ export const BattleTemplate: React.FC<BattleTemplateProps> = ({
   const eventBus = useEventBus();
 
   const handleBattleAction = (action: string) => {
-    eventBus.emit('UI:BATTLE_ACTION', { action, entity });
+    eventBus.emit('UI:BATTLE_ACTION', { action, entity } as EventPayload);
     onBattleAction?.(action);
   };
 
   const handleBattleEnd = (result: 'win' | 'lose' | 'flee') => {
-    eventBus.emit('UI:BATTLE_END', { result, entity });
+    eventBus.emit('UI:BATTLE_END', { result, entity } as EventPayload);
     onBattleEnd?.(result);
   };
 
   const handleMenuSelect = (option: MenuOption) => {
     if (option.event) {
-      eventBus.emit(`UI:${option.event}`, { option, entity });
+      eventBus.emit(`UI:${option.event}`, { option, entity } as unknown as EventPayload);
     }
     if (option.navigatesTo) {
-      eventBus.emit('UI:navigate', { to: option.navigatesTo });
+      eventBus.emit('UI:navigate', { to: option.navigatesTo } as EventPayload);
     }
   };
 
@@ -89,7 +90,7 @@ export const BattleTemplate: React.FC<BattleTemplateProps> = ({
       <View style={[styles.container, { backgroundColor: theme.colors.background }, style]}>
         <ErrorState
           message={error.message}
-          onRetry={() => eventBus.emit('UI:BATTLE_RETRY', { entity })}
+          onRetry={() => eventBus.emit('UI:BATTLE_RETRY', { entity } as EventPayload)}
         />
       </View>
     );

@@ -15,7 +15,7 @@ export { PageHeader } from './PageHeader';
 export type { PageHeaderProps } from './PageHeader';
 
 export { DataTable } from './DataTable';
-export type { DataTableProps, DataColumn, DataRow } from './DataTable';
+export type { DataTableProps, DataColumn } from './DataTable';
 
 export { StatCard } from './StatCard';
 export type { StatCardProps } from './StatCard';

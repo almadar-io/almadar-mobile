@@ -1,6 +1,6 @@
 // Layout primitives
-export { Box, VStack, HStack } from './Stack';
-export type { BoxProps, VStackProps, HStackProps } from './Stack';
+export { Box, VStack, HStack, VStack as Stack } from './Stack';
+export type { BoxProps, VStackProps, HStackProps, VStackProps as StackProps } from './Stack';
 
 export { Center } from './Center';
 export type { CenterProps } from './Center';

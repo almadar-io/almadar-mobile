@@ -7,13 +7,14 @@ import { Button } from '../atoms/Button';
 import { HStack } from '../atoms/Stack';
 import { LoadingState } from '../molecules/LoadingState';
 import { ErrorState } from '../molecules/ErrorState';
+import type { BusEvent, BusEventListener, EventKey, EventPayload } from '../../types';
 
 export interface DrawerAction {
   label: string;
-  event?: string;
+  event?: EventKey;
   navigatesTo?: string;
   variant?: 'default' | 'primary' | 'secondary' | 'ghost' | 'destructive';
-  payload?: Record<string, unknown>;
+  payload?: EventPayload;
 }
 
 export interface DrawerContent {
@@ -25,13 +26,6 @@ export interface DrawerContent {
   width?: number;
   closeOnBackdrop?: boolean;
   showCloseButton?: boolean;
-}
-
-interface KFlowEvent {
-  type: string;
-  payload?: Record<string, unknown>;
-  timestamp: number;
-  source?: string;
 }
 
 export interface DrawerSlotProps {
@@ -47,9 +41,9 @@ export interface DrawerSlotProps {
   /** Default width for drawers */
   defaultWidth?: number;
   /** Event name to listen for open commands */
-  openEvent?: string;
+  openEvent?: EventKey;
   /** Event name to listen for close commands */
-  closeEvent?: string;
+  closeEvent?: EventKey;
 }
 
 export const DrawerSlot: React.FC<DrawerSlotProps> = ({
@@ -94,10 +88,10 @@ export const DrawerSlot: React.FC<DrawerSlotProps> = ({
   }, []);
 
   useEffect(() => {
-    const handleOpen = (event: KFlowEvent) => {
+    const handleOpen: BusEventListener = (event) => {
       const payload = event.payload;
       if (!payload) return;
-      const drawerPayload = payload as DrawerContent | { drawer: DrawerContent };
+      const drawerPayload = payload as unknown as DrawerContent | { drawer: DrawerContent };
       const drawer = 'drawer' in drawerPayload ? drawerPayload.drawer : drawerPayload;
       openDrawer({
         ...drawer,
@@ -106,7 +100,7 @@ export const DrawerSlot: React.FC<DrawerSlotProps> = ({
       });
     };
 
-    const handleClose = (event: KFlowEvent) => {
+    const handleClose: BusEventListener = (event) => {
       const payload = event.payload;
       const closePayload = payload as { drawerId?: string; all?: boolean } | undefined;
       if (closePayload?.all) {

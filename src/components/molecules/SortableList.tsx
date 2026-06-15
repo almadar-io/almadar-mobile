@@ -12,6 +12,7 @@ import { useEventBus } from '../../hooks/useEventBus';
 import { Icon } from '../atoms/Icon';
 import { LoadingState } from './LoadingState';
 import { ErrorState } from './ErrorState';
+import type { EventKey, EventPayload } from '../../types';
 
 export type DragHandlePosition = 'left' | 'right';
 
@@ -19,7 +20,7 @@ export interface SortableListProps<T = Record<string, unknown>> {
   items: T[];
   renderItem: (item: T, index: number) => React.ReactNode;
   keyExtractor: (item: T, index: number) => string;
-  reorderEvent?: string;
+  reorderEvent?: EventKey;
   dragHandlePosition?: DragHandlePosition;
   onReorder?: (items: T[]) => void;
   style?: ViewStyle;
@@ -60,7 +61,8 @@ export const SortableList = <T,>({
       next.splice(toIndex, 0, moved);
       onReorder?.(next);
       if (reorderEvent) {
-        eventBus.emit(`UI:${reorderEvent}`, { items: next, fromIndex, toIndex });
+        const payload: EventPayload = { items: next as unknown as EventPayload[], fromIndex, toIndex };
+        eventBus.emit(`UI:${reorderEvent}`, payload);
       }
       return next;
     });

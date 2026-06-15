@@ -8,6 +8,8 @@ import { Card } from '../../atoms/Card';
 import { Badge } from '../../atoms/Badge';
 import { LoadingState } from '../../molecules/LoadingState';
 import { ErrorState } from '../../molecules/ErrorState';
+import type { EventKey, EventPayload } from '../../../types';
+
 
 export interface BookCoverPageProps {
   /** Book title */
@@ -41,7 +43,7 @@ export interface BookCoverPageProps {
   /** Event emitted when author is tapped */
   authorEvent?: string;
   /** Payload to include with events */
-  actionPayload?: Record<string, unknown>;
+  actionPayload?: EventPayload;
 }
 
 export const BookCoverPage: React.FC<BookCoverPageProps> = ({

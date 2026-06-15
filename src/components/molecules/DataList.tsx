@@ -10,6 +10,7 @@ import { FlatList, View, StyleSheet, ViewStyle } from 'react-native';
 import { useTheme } from '../../providers/ThemeContext';
 import { useEventBus } from '../../hooks/useEventBus';
 import { getNestedValue } from '../../lib/getNestedValue';
+import type { EntityRow, EventKey, EventPayload } from '../../types';
 import { Typography } from '../atoms/Typography';
 import { Badge } from '../atoms/Badge';
 import { Button } from '../atoms/Button';
@@ -35,7 +36,7 @@ export interface DataListField {
 
 export interface DataListItemAction {
   label: string;
-  event: string;
+  event: EventKey;
   icon?: string;
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
 }
@@ -43,7 +44,7 @@ export interface DataListItemAction {
 // ── Props ────────────────────────────────────────────────────────────
 
 export interface DataListProps {
-  entity: unknown | readonly unknown[];
+  entity: readonly EntityRow[];
   fields: readonly DataListField[];
   columns?: readonly DataListField[];
   itemActions?: readonly DataListItemAction[];
@@ -56,9 +57,9 @@ export interface DataListProps {
   isLoading?: boolean;
   error?: Error | null;
   infiniteScroll?: boolean;
-  loadMoreEvent?: string;
+  loadMoreEvent?: EventKey;
   hasMore?: boolean;
-  children?: (item: Record<string, unknown>, index: number) => React.ReactNode;
+  children?: (item: EntityRow, index: number) => React.ReactNode;
   pageSize?: number;
 }
 
@@ -99,10 +100,10 @@ function formatValue(value: unknown, format?: DataListField['format']): string {
 }
 
 function groupData(
-  items: Record<string, unknown>[],
+  items: EntityRow[],
   field: string,
-): { label: string; items: Record<string, unknown>[] }[] {
-  const groups = new Map<string, Record<string, unknown>[]>();
+): { label: string; items: EntityRow[] }[] {
+  const groups = new Map<string, EntityRow[]>();
   for (const item of items) {
     const key = String(getNestedValue(item, field) ?? '');
     const group = groups.get(key);
@@ -145,7 +146,7 @@ export const DataList: React.FC<DataListProps> = ({
   const [visibleCount, setVisibleCount] = useState(pageSize || Infinity);
 
   const fields = fieldsProp ?? columnsProp ?? [];
-  const allData: Record<string, unknown>[] = (Array.isArray(entity) ? entity : entity ? [entity] : []) as Record<string, unknown>[];
+  const allData: EntityRow[] = [...entity];
   const data = pageSize > 0 ? allData.slice(0, visibleCount) : allData;
   const hasMoreLocal = pageSize > 0 && visibleCount < allData.length;
 
@@ -160,8 +161,9 @@ export const DataList: React.FC<DataListProps> = ({
   if (error) return <ErrorState message={error.message} />;
   if (data.length === 0) return <EmptyState message="No items found" />;
 
-  const handleAction = (action: DataListItemAction, itemData: Record<string, unknown>) => {
-    eventBus.emit(`UI:${action.event}`, { id: itemData.id, row: itemData });
+  const handleAction = (action: DataListItemAction, itemData: EntityRow) => {
+    const payload: EventPayload = { id: itemData.id, row: itemData };
+    eventBus.emit(`UI:${action.event}`, payload);
   };
 
   const isCard = variant === 'card';
@@ -238,7 +240,7 @@ export const DataList: React.FC<DataListProps> = ({
   // ── Grouped rendering ────────────────────────────────────────────
   const groups = groupBy ? groupData(data, groupBy) : [{ label: '', items: data }];
 
-  const renderItem = (itemData: Record<string, unknown>, index: number) => {
+  const renderItem = (itemData: EntityRow, index: number) => {
     if (hasRenderProp) {
       return (
         <View
@@ -358,7 +360,7 @@ export const DataList: React.FC<DataListProps> = ({
   };
 
   // Flatten groups for FlatList
-  type FlatItem = { type: 'header'; label: string } | { type: 'item'; data: Record<string, unknown>; index: number };
+  type FlatItem = { type: 'header'; label: string } | { type: 'item'; data: EntityRow; index: number };
   const flatItems: FlatItem[] = [];
   let globalIndex = 0;
   for (const group of groups) {

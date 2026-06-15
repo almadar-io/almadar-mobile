@@ -3,6 +3,8 @@ import { Pressable, StyleSheet, ViewStyle } from 'react-native';
 import { useTheme } from '../../providers/ThemeContext';
 import { useEventBus } from '../../hooks/useEventBus';
 import { Typography } from './Typography';
+import type { EventKey, EventPayload } from '../../types';
+
 
 export type HighlightType = 'mark' | 'code' | 'emphasis' | 'custom';
 
@@ -10,8 +12,8 @@ export interface TextHighlightProps {
   children: React.ReactNode;
   highlightType?: HighlightType;
   isActive?: boolean;
-  action?: string;
-  actionPayload?: Record<string, unknown>;
+  action?: EventKey;
+  actionPayload?: EventPayload;
   color?: string;
   style?: ViewStyle;
   isLoading?: boolean;

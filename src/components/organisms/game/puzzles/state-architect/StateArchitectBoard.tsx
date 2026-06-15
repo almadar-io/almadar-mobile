@@ -19,6 +19,7 @@ import {
 } from 'react-native';
 import { useTheme } from '../../../../../providers/ThemeContext';
 import { useEventBus } from '../../../../../hooks/useEventBus';
+import type { EventPayload } from '@almadar/core';
 import { Card } from '../../../../atoms/Card';
 import { Button } from '../../../../atoms/Button';
 import { Typography } from '../../../../atoms/Typography';
@@ -170,19 +171,19 @@ export const StateArchitectBoard: React.FC<StateArchitectBoardProps> = ({
     setTransitions((prev) => [...prev, newTrans]);
     setAddingTransition(false);
     setSelectedTarget('');
-    eventBus.emit('UI:STATE_ARCHITECT_ADD_TRANSITION', { transition: newTrans });
+    eventBus.emit('UI:STATE_ARCHITECT_ADD_TRANSITION', { transition: newTrans } as unknown as EventPayload);
   }, [selectedState, selectedTarget, selectedEvent, eventBus]);
 
   const handleRemoveTransition = useCallback((transId: string) => {
     setTransitions((prev) => prev.filter((t) => t.id !== transId));
-    eventBus.emit('UI:STATE_ARCHITECT_REMOVE_TRANSITION', { id: transId });
+    eventBus.emit('UI:STATE_ARCHITECT_REMOVE_TRANSITION', { id: transId } as EventPayload);
   }, [eventBus]);
 
   // -- Test runner ----------------------------------------------------------
 
   const handleTest = useCallback(() => {
     if (playState !== 'editing') return;
-    if (testEvent) eventBus.emit(`UI:${testEvent}`, {});
+    if (testEvent) eventBus.emit(`UI:${testEvent}`, {} as EventPayload);
 
     setPlayState('testing');
     setTestResults([]);
@@ -199,7 +200,7 @@ export const StateArchitectBoard: React.FC<StateArchitectBoardProps> = ({
           eventBus.emit(`UI:${completeEvent}`, {
             success: true,
             passedTests: results.filter((r) => r.passed).length,
-          });
+          } as EventPayload);
         }
         if (!allPassed) {
           setAttempts((prev) => prev + 1);

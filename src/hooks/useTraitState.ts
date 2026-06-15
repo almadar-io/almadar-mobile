@@ -1,17 +1,17 @@
 import { useState, useCallback } from 'react';
 
-export interface TraitState {
+export interface MobileTraitState {
   [key: string]: unknown;
 }
 
-export interface UseTraitStateReturn<T extends TraitState> {
+export interface UseTraitStateReturn<T extends MobileTraitState> {
   state: T;
   setState: (updates: Partial<T>) => void;
   getValue: <K extends keyof T>(key: K) => T[K];
   setValue: <K extends keyof T>(key: K, value: T[K]) => void;
 }
 
-export function useTraitState<T extends TraitState>(initialState: T): UseTraitStateReturn<T> {
+export function useTraitState<T extends MobileTraitState>(initialState: T): UseTraitStateReturn<T> {
   const [state, setStateRaw] = useState<T>(initialState);
 
   const setState = useCallback((updates: Partial<T>) => {

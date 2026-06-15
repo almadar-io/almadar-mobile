@@ -3,6 +3,8 @@ import { Pressable, StyleSheet, ViewStyle } from 'react-native';
 import { useTheme } from '../../providers/ThemeContext';
 import { useEventBus } from '../../hooks/useEventBus';
 import { Typography } from './Typography';
+import type { EventKey, EventPayload } from '../../types';
+
 
 export interface DayCellProps {
   date: number;
@@ -11,8 +13,8 @@ export interface DayCellProps {
   isDisabled?: boolean;
   hasEvents?: boolean;
   onClick?: () => void;
-  action?: string;
-  actionPayload?: Record<string, unknown>;
+  action?: EventKey;
+  actionPayload?: EventPayload;
   style?: ViewStyle;
   isLoading?: boolean;
   error?: Error | null;

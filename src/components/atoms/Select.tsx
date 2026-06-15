@@ -14,6 +14,8 @@ import { useTheme } from '../../providers/ThemeContext';
 import { useEventBus } from '../../hooks/useEventBus';
 import { LoadingState } from '../molecules/LoadingState';
 import { ErrorState } from '../molecules/ErrorState';
+import type { EventKey, EventPayload } from '../../types';
+
 
 export interface SelectOption {
   label: string;
@@ -35,9 +37,9 @@ export interface SelectProps {
   /** Entity name for schema-driven auto-fetch */
   entity?: string;
   /** Declarative change event name - emits UI:${changeEvent} via eventBus */
-  changeEvent?: string;
+  changeEvent?: EventKey;
   /** Payload base to include with the change event */
-  actionPayload?: Record<string, unknown>;
+  actionPayload?: EventPayload;
 }
 
 export const Select: React.FC<SelectProps> = ({

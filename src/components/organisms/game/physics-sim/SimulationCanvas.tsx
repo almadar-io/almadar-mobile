@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { useTheme } from '../../../../providers/ThemeContext';
 import { useEventBus } from '../../../../hooks/useEventBus';
+import type { EventPayload } from '@almadar/core';
 import { Card } from '../../../atoms/Card';
 import { Typography } from '../../../atoms/Typography';
 import { HStack } from '../../../atoms/Stack';
@@ -109,16 +110,16 @@ export const SimulationCanvas: React.FC<SimulationCanvasProps> = ({
 
     if (clickedBody) {
       setSelectedBodyId(clickedBody.id);
-      eventBus.emit('UI:PHYSICS_BODY_PRESSED', { body: clickedBody });
+      eventBus.emit('UI:PHYSICS_BODY_PRESSED', { body: clickedBody } as unknown as EventPayload);
       onBodyPress?.(clickedBody);
     } else {
-      eventBus.emit('UI:PHYSICS_CANVAS_PRESSED', { x, y });
+      eventBus.emit('UI:PHYSICS_CANVAS_PRESSED', { x, y } as EventPayload);
       onCanvasPress?.(x, y);
     }
   };
 
   const handleBodyMove = (bodyId: string, x: number, y: number) => {
-    eventBus.emit('UI:PHYSICS_BODY_MOVED', { bodyId, x, y });
+    eventBus.emit('UI:PHYSICS_BODY_MOVED', { bodyId, x, y } as EventPayload);
     onBodyMove?.(bodyId, x, y);
   };
 

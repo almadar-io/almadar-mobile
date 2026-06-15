@@ -10,6 +10,7 @@ import {
 
 import { useTheme } from '../../providers/ThemeContext';
 import { useEventBus } from '../../hooks/useEventBus';
+import type { EventPayload } from '@almadar/core';
 import { Card } from '../atoms/Card';
 import { Typography } from '../atoms/Typography';
 import { Button } from '../atoms/Button';
@@ -93,7 +94,7 @@ export const ContentRenderer: React.FC<ContentRendererProps> = ({
       entity,
       itemId,
       href,
-    });
+    } as EventPayload);
   }, [entity, eventPrefix, eventBus]);
 
   const handleButtonPress = useCallback((item: ContentItem) => {
@@ -102,7 +103,7 @@ export const ContentRenderer: React.FC<ContentRendererProps> = ({
       itemId: item.id,
       action: item.href,
       metadata: item.metadata,
-    });
+    } as unknown as EventPayload);
 
     if (item.href) {
       handleLinkPress(item.href, item.id);
@@ -191,7 +192,7 @@ export const ContentRenderer: React.FC<ContentRendererProps> = ({
           itemId: item.id,
           action: item.href,
           metadata: item.metadata,
-        }}
+        } as unknown as EventPayload}
       >
         {item.content || item.title || 'Button'}
       </Button>

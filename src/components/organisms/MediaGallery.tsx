@@ -18,6 +18,8 @@ import { Badge } from '../atoms/Badge';
 import { LoadingState } from '../molecules/LoadingState';
 import { ErrorState } from '../molecules/ErrorState';
 import { EmptyState } from '../molecules/EmptyState';
+import type { EventPayload } from '@almadar/core';
+
 
 export type MediaType = 'image' | 'video';
 
@@ -50,7 +52,7 @@ export interface MediaGalleryProps {
   /** Event emitted when an item is long-pressed */
   contextEvent?: string;
   /** Payload to include with events */
-  actionPayload?: Record<string, unknown>;
+  actionPayload?: EventPayload;
 }
 
 const { width: screenWidth } = Dimensions.get('window');
@@ -101,14 +103,14 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({
 
   const handleItemPress = (item: MediaItem, index: number) => {
     if (selectEvent) {
-      eventBus.emit(`UI:${selectEvent}`, { ...actionPayload, item, index });
+      eventBus.emit(`UI:${selectEvent}`, { ...actionPayload, item, index } as unknown as EventPayload);
     }
     setSelectedIndex(index);
   };
 
   const handleItemLongPress = (item: MediaItem, index: number) => {
     if (contextEvent) {
-      eventBus.emit(`UI:${contextEvent}`, { ...actionPayload, item, index });
+      eventBus.emit(`UI:${contextEvent}`, { ...actionPayload, item, index } as unknown as EventPayload);
     }
   };
 

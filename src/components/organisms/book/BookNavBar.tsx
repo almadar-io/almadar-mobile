@@ -9,6 +9,8 @@ import { HStack, VStack } from '../../atoms/Stack';
 import { Icon } from '../../atoms/Icon';
 import { LoadingState } from '../../molecules/LoadingState';
 import { ErrorState } from '../../molecules/ErrorState';
+import type { EventKey, EventPayload } from '../../../types';
+
 
 export interface BookNavBarProps {
   /** Current chapter number */
@@ -44,7 +46,7 @@ export interface BookNavBarProps {
   /** Event emitted when TOC is requested */
   tocEvent?: string;
   /** Payload to include with events */
-  actionPayload?: Record<string, unknown>;
+  actionPayload?: EventPayload;
 }
 
 export const BookNavBar: React.FC<BookNavBarProps> = ({

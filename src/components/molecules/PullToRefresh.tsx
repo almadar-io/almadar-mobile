@@ -2,10 +2,11 @@ import React, { useState, useCallback } from 'react';
 import { ScrollView, RefreshControl, StyleSheet, ViewStyle } from 'react-native';
 import { useTheme } from '../../providers/ThemeContext';
 import { useEventBus } from '../../hooks/useEventBus';
+import type { EventKey, EventPayload } from '../../types';
 
 export interface PullToRefreshProps {
-  refreshEvent?: string;
-  refreshPayload?: Record<string, unknown>;
+  refreshEvent?: EventKey;
+  refreshPayload?: EventPayload;
   onRefresh?: () => Promise<void> | void;
   children: React.ReactNode;
   style?: ViewStyle;

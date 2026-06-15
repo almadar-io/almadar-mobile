@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { useTheme } from '../../../../../providers/ThemeContext';
 import { useEventBus } from '../../../../../hooks/useEventBus';
+import type { EventPayload } from '@almadar/core';
 import { Card } from '../../../../atoms/Card';
 import { Badge } from '../../../../atoms/Badge';
 import { Button } from '../../../../atoms/Button';
@@ -72,32 +73,32 @@ export const SequenceBar: React.FC<SequenceBarProps> = ({
   }, [currentStep]);
 
   const handleStepPress = (step: SequenceStep, index: number) => {
-    eventBus.emit('UI:SEQUENCE_STEP_PRESSED', { step, index });
+    eventBus.emit('UI:SEQUENCE_STEP_PRESSED', { step, index } as unknown as EventPayload);
     onStepPress?.(step, index);
   };
 
   const handleStepRemove = (stepId: string, index: number) => {
-    eventBus.emit('UI:SEQUENCE_STEP_REMOVED', { stepId, index });
+    eventBus.emit('UI:SEQUENCE_STEP_REMOVED', { stepId, index } as EventPayload);
     onStepRemove?.(stepId, index);
   };
 
   const handlePlay = () => {
-    eventBus.emit('UI:SEQUENCE_PLAY', { steps });
+    eventBus.emit('UI:SEQUENCE_PLAY', { steps } as unknown as EventPayload);
     onPlay?.();
   };
 
   const handlePause = () => {
-    eventBus.emit('UI:SEQUENCE_PAUSE', {});
+    eventBus.emit('UI:SEQUENCE_PAUSE', {} as EventPayload);
     onPause?.();
   };
 
   const handleStop = () => {
-    eventBus.emit('UI:SEQUENCE_STOP', {});
+    eventBus.emit('UI:SEQUENCE_STOP', {} as EventPayload);
     onStop?.();
   };
 
   const handleClear = () => {
-    eventBus.emit('UI:SEQUENCE_CLEAR', {});
+    eventBus.emit('UI:SEQUENCE_CLEAR', {} as EventPayload);
     onClear?.();
   };
 

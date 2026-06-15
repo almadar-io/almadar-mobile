@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { useTheme } from '../../../providers/ThemeContext';
 import { useEventBus } from '../../../hooks/useEventBus';
+import type { EventPayload } from '@almadar/core';
 import { Card } from '../../atoms/Card';
 import { Typography } from '../../atoms/Typography';
 import { VStack } from '../../atoms/Stack';
@@ -83,7 +84,7 @@ export const DialogueBox: React.FC<DialogueBoxProps> = ({
       // Instant display
       setDisplayedText(dialogue.text);
       setIsTyping(false);
-      if (completeEvent) eventBus.emit(`UI:${completeEvent}`, {});
+      if (completeEvent) eventBus.emit(`UI:${completeEvent}`, {} as EventPayload);
       onComplete?.();
     } else {
       setIsTyping(true);
@@ -107,13 +108,13 @@ export const DialogueBox: React.FC<DialogueBoxProps> = ({
       } else {
         setIsTyping(false);
         clearInterval(interval);
-        if (completeEvent) eventBus.emit(`UI:${completeEvent}`, {});
+        if (completeEvent) eventBus.emit(`UI:${completeEvent}`, {} as EventPayload);
         onComplete?.();
 
         // Auto-advance if configured
         if (dialogue.autoAdvance && !dialogue.choices?.length) {
           autoAdvanceTimerRef.current = setTimeout(() => {
-            if (advanceEvent) eventBus.emit(`UI:${advanceEvent}`, {});
+            if (advanceEvent) eventBus.emit(`UI:${advanceEvent}`, {} as EventPayload);
             onAdvance?.();
           }, dialogue.autoAdvance);
         }
@@ -129,7 +130,7 @@ export const DialogueBox: React.FC<DialogueBoxProps> = ({
       charIndexRef.current = textRef.current.length;
       setDisplayedText(textRef.current);
       setIsTyping(false);
-      if (completeEvent) eventBus.emit(`UI:${completeEvent}`, {});
+      if (completeEvent) eventBus.emit(`UI:${completeEvent}`, {} as EventPayload);
       onComplete?.();
     }
   }, [isTyping, onComplete, completeEvent, eventBus]);
@@ -139,7 +140,7 @@ export const DialogueBox: React.FC<DialogueBoxProps> = ({
     if (isTyping) {
       skipTypewriter();
     } else if (!dialogue.choices?.length) {
-      if (advanceEvent) eventBus.emit(`UI:${advanceEvent}`, {});
+      if (advanceEvent) eventBus.emit(`UI:${advanceEvent}`, {} as EventPayload);
       onAdvance?.();
     }
   }, [isTyping, skipTypewriter, dialogue.choices, onAdvance, advanceEvent, eventBus]);
@@ -147,7 +148,7 @@ export const DialogueBox: React.FC<DialogueBoxProps> = ({
   // Handle choice selection
   const handleChoice = useCallback((choice: DialogueChoice, index: number) => {
     setSelectedChoice(index);
-    if (choiceEvent) eventBus.emit(`UI:${choiceEvent}`, { choice });
+    if (choiceEvent) eventBus.emit(`UI:${choiceEvent}`, { choice } as unknown as EventPayload);
     onChoice?.(choice);
   }, [onChoice, choiceEvent, eventBus]);
 

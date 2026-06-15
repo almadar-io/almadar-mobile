@@ -6,6 +6,8 @@ import { Typography } from '../atoms/Typography';
 import { HStack } from '../atoms/Stack';
 import { LoadingState } from './LoadingState';
 import { ErrorState } from './ErrorState';
+import type { EventKey, EventPayload } from '../../types';
+
 
 export type StarRatingPrecision = 'full' | 'half';
 
@@ -15,8 +17,8 @@ export interface StarRatingProps {
   readOnly?: boolean;
   precision?: StarRatingPrecision;
   size?: number;
-  action?: string;
-  actionPayload?: Record<string, unknown>;
+  action?: EventKey;
+  actionPayload?: EventPayload;
   onChange?: (value: number) => void;
   style?: ViewStyle;
   isLoading?: boolean;

@@ -10,10 +10,11 @@ import { VStack, HStack } from '../atoms/Stack';
 import { LoadingState } from './LoadingState';
 import { ErrorState } from './ErrorState';
 import { EmptyState } from './EmptyState';
+import type { EntityRow, EventKey, EventPayload, FieldValue } from '../../types';
 
 export interface RepeatableItem {
   id: string;
-  data: Record<string, unknown>;
+  data: Record<string, FieldValue>;
 }
 
 export interface RepeatableFormSectionProps {
@@ -37,7 +38,7 @@ export interface RepeatableFormSectionProps {
   /** Render function for each item */
   renderItem: (item: RepeatableItem, index: number, actions: {
     remove: () => void;
-    update: (data: Record<string, unknown>) => void;
+    update: (data: Record<string, FieldValue>) => void;
   }) => React.ReactNode;
   /** Label for the add button */
   addButtonLabel?: string;
@@ -48,11 +49,11 @@ export interface RepeatableFormSectionProps {
   /** Callback when items change */
   onChange?: (items: RepeatableItem[]) => void;
   /** Event name when item is added */
-  addEvent?: string;
+  addEvent?: EventKey;
   /** Event name when item is removed */
-  removeEvent?: string;
+  removeEvent?: EventKey;
   /** Event name when item is updated */
-  updateEvent?: string;
+  updateEvent?: EventKey;
 }
 
 export const RepeatableFormSection: React.FC<RepeatableFormSectionProps> = ({
@@ -104,12 +105,13 @@ export const RepeatableFormSection: React.FC<RepeatableFormSectionProps> = ({
     const newItems = [...items, newItem];
     setItems(newItems);
 
-    eventBus.emit(`UI:${addEvent}`, {
+    const addPayload: EventPayload = {
       entity,
-      item: newItem,
+      item: newItem as unknown as EntityRow,
       index: newItems.length - 1,
       totalItems: newItems.length,
-    });
+    };
+    eventBus.emit(`UI:${addEvent}`, addPayload);
 
     onChange?.(newItems);
   }, [items, maxItems, generateId, entity, addEvent, onChange, eventBus]);
@@ -123,28 +125,30 @@ export const RepeatableFormSection: React.FC<RepeatableFormSectionProps> = ({
     const newItems = items.filter((_, i) => i !== index);
     setItems(newItems);
 
-    eventBus.emit(`UI:${removeEvent}`, {
+    const removePayload: EventPayload = {
       entity,
-      item: removedItem,
+      item: removedItem as unknown as EntityRow,
       index,
       totalItems: newItems.length,
-    });
+    };
+    eventBus.emit(`UI:${removeEvent}`, removePayload);
 
     onChange?.(newItems);
   }, [items, minItems, entity, removeEvent, onChange, eventBus]);
 
-  const handleUpdateItem = useCallback((index: number, data: Record<string, unknown>) => {
+  const handleUpdateItem = useCallback((index: number, data: Record<string, FieldValue>) => {
     const newItems = items.map((item, i) =>
       i === index ? { ...item, data: { ...item.data, ...data } } : item
     );
     setItems(newItems);
 
-    eventBus.emit(`UI:${updateEvent}`, {
+    const updatePayload: EventPayload = {
       entity,
-      item: newItems[index],
+      item: newItems[index] as unknown as EntityRow,
       index,
       data,
-    });
+    };
+    eventBus.emit(`UI:${updateEvent}`, updatePayload);
 
     onChange?.(newItems);
   }, [items, entity, updateEvent, onChange, eventBus]);
