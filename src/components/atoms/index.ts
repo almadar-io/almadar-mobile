@@ -99,7 +99,7 @@ export { InfiniteScrollSentinel } from './InfiniteScrollSentinel';
 export type { InfiniteScrollSentinelProps } from './InfiniteScrollSentinel';
 
 // Game components
-export { HealthBar, ControlButton, ScoreDisplay, Sprite, StateIndicator } from './game';
+export { HealthBar, ControlButton, ScoreDisplay, Sprite, StateIndicator, OrbitalGameCanvas } from './game';
 export type {
   HealthBarProps,
   ControlButtonProps,
@@ -107,4 +107,5 @@ export type {
   SpriteProps,
   StateIndicatorProps,
   StateStyle,
+  OrbitalGameCanvasProps,
 } from './game';

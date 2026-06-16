@@ -12,3 +12,6 @@ export type { SpriteProps } from './Sprite';
 
 export { StateIndicator } from './StateIndicator';
 export type { StateIndicatorProps, StateStyle } from './StateIndicator';
+
+export { OrbitalGameCanvas } from './OrbitalGameCanvas';
+export type { OrbitalGameCanvasProps } from './OrbitalGameCanvas';
