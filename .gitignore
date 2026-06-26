@@ -32,3 +32,6 @@ Thumbs.db
 # Expo
 .expo/
 web-build/
+
+# Claude Code agent worktrees / local state
+.claude/
