@@ -5,7 +5,7 @@ import { useEventBus } from '../../hooks/useEventBus';
 import { Toast, ToastVariant } from '../molecules/Toast';
 import { LoadingState } from '../molecules/LoadingState';
 import { ErrorState } from '../molecules/ErrorState';
-import type { BusEvent, BusEventListener, EventKey, EventPayload } from '../../types';
+import type { BusEventListener, EventKey, EventPayload } from '../../types';
 
 export interface ToastItem {
   id: string;

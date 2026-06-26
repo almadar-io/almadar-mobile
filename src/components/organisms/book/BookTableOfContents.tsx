@@ -16,7 +16,7 @@ import { Icon } from '../../atoms/Icon';
 import { LoadingState } from '../../molecules/LoadingState';
 import { ErrorState } from '../../molecules/ErrorState';
 import { EmptyState } from '../../molecules/EmptyState';
-import type { EventKey, EventPayload } from '../../../types';
+import type { EventPayload } from '../../../types';
 
 
 export interface BookChapter {

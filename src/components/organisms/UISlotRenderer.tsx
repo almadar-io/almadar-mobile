@@ -10,7 +10,7 @@ import { Button } from '../atoms/Button';
 import { LoadingState } from '../molecules/LoadingState';
 import { ErrorState } from '../molecules/ErrorState';
 import { EmptyState } from '../molecules/EmptyState';
-import type { BusEvent, BusEventListener, EventKey, EventPayload } from '../../types';
+import type { BusEventListener, EventKey, EventPayload } from '../../types';
 
 export type UIComponentType = 
   | 'card'

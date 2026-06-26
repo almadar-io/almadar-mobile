@@ -12,7 +12,7 @@ import { BookChapterView } from './BookChapterView';
 import { BookCoverPage, BookCoverPageProps } from './BookCoverPage';
 import { BookNavBar } from './BookNavBar';
 import { BookTableOfContents, BookChapter } from './BookTableOfContents';
-import type { EventKey, EventPayload } from '../../../types';
+import type { EventPayload } from '../../../types';
 
 
 export interface BookViewerProps {

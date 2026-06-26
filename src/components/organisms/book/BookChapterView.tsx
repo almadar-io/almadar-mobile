@@ -6,7 +6,7 @@ import { Typography } from '../../atoms/Typography';
 import { VStack } from '../../atoms/Stack';
 import { LoadingState } from '../../molecules/LoadingState';
 import { ErrorState } from '../../molecules/ErrorState';
-import type { EventKey, EventPayload } from '../../../types';
+import type { EventPayload } from '../../../types';
 
 
 export interface BookChapterViewProps {

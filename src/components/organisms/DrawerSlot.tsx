@@ -7,7 +7,7 @@ import { Button } from '../atoms/Button';
 import { HStack } from '../atoms/Stack';
 import { LoadingState } from '../molecules/LoadingState';
 import { ErrorState } from '../molecules/ErrorState';
-import type { BusEvent, BusEventListener, EventKey, EventPayload } from '../../types';
+import type { BusEventListener, EventKey, EventPayload } from '../../types';
 
 export interface DrawerAction {
   label: string;

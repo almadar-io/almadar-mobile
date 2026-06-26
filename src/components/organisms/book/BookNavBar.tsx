@@ -9,7 +9,7 @@ import { HStack, VStack } from '../../atoms/Stack';
 import { Icon } from '../../atoms/Icon';
 import { LoadingState } from '../../molecules/LoadingState';
 import { ErrorState } from '../../molecules/ErrorState';
-import type { EventKey, EventPayload } from '../../../types';
+import type { EventPayload } from '../../../types';
 
 
 export interface BookNavBarProps {

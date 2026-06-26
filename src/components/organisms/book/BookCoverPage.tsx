@@ -8,7 +8,7 @@ import { Card } from '../../atoms/Card';
 import { Badge } from '../../atoms/Badge';
 import { LoadingState } from '../../molecules/LoadingState';
 import { ErrorState } from '../../molecules/ErrorState';
-import type { EventKey, EventPayload } from '../../../types';
+import type { EventPayload } from '../../../types';
 
 
 export interface BookCoverPageProps {
