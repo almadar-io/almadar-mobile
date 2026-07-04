@@ -14,6 +14,9 @@ importers:
       '@almadar/patterns':
         specifier: '>=2.14.1'
         version: 2.93.0
+      '@almadar/runtime':
+        specifier: ^6.24.0
+        version: 6.24.0(express@5.2.1)
       '@almadar/ui':
         specifier: ^5.22.3
         version: 5.103.0(@tanstack/react-query@5.101.2(react@19.2.7))(@types/react@19.2.17)(express@5.2.1)(react-dom@19.2.7(react@19.2.7))(react-router-dom@7.18.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react@19.2.7)
@@ -125,8 +128,8 @@ packages:
   '@almadar/patterns@2.93.0':
     resolution: {integrity: sha512-PY82ZxBhZsEd4RDBok/JwNFjLf4lvwMqiVAm+/V+4b+trVkZl4gC0HwQBT7PHLBy3MtcW04csIrK3lJjt1oB7g==}
 
-  '@almadar/runtime@6.23.0':
-    resolution: {integrity: sha512-iQ00XxN4ude0a1VAi0gioQNIZCJawoMXbDHxeONEqlpR3wi2LAMhChH1mpjhiY9d7LwhEtKiZzB0NUIaEzHRYg==}
+  '@almadar/runtime@6.24.0':
+    resolution: {integrity: sha512-Lx90Q94fVB2yTA2S3F1ZTJ58lfXWGLLhU5jQn1AuKlxk3t32BDIyYS4b8jGIBXI1ZJRxWHm+wiO8whhUPXYpHw==}
     peerDependencies:
       express: ^5.0.0
     peerDependenciesMeta:
@@ -5422,7 +5425,7 @@ snapshots:
     dependencies:
       '@almadar/core': 10.16.0
 
-  '@almadar/runtime@6.23.0(express@5.2.1)':
+  '@almadar/runtime@6.24.0(express@5.2.1)':
     dependencies:
       '@almadar/core': 10.16.0
       '@almadar/evaluator': 2.19.0
@@ -5473,7 +5476,7 @@ snapshots:
       '@almadar/evaluator': 2.19.0
       '@almadar/logger': 1.4.0
       '@almadar/patterns': 2.93.0
-      '@almadar/runtime': 6.23.0(express@5.2.1)
+      '@almadar/runtime': 6.24.0(express@5.2.1)
       '@almadar/std': 16.123.0
       '@almadar/syntax': 1.7.0
       '@dnd-kit/core': 6.3.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -7339,7 +7342,7 @@ snapshots:
   '@types/jsonwebtoken@9.0.10':
     dependencies:
       '@types/ms': 2.1.0
-      '@types/node': 22.20.0
+      '@types/node': 26.1.0
 
   '@types/katex@0.16.8': {}
 
@@ -7369,7 +7372,7 @@ snapshots:
   '@types/request@2.48.13':
     dependencies:
       '@types/caseless': 0.12.5
-      '@types/node': 22.20.0
+      '@types/node': 26.1.0
       '@types/tough-cookie': 4.0.5
       form-data: 2.5.6
     optional: true
@@ -10602,7 +10605,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.1
-      '@types/node': 22.20.0
+      '@types/node': 26.1.0
       long: 5.3.2
     optional: true
 
