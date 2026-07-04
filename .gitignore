@@ -35,3 +35,4 @@ web-build/
 
 # Claude Code agent worktrees / local state
 .claude/
+.turbo/
