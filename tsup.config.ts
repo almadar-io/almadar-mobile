@@ -22,7 +22,7 @@ export default defineConfig({
     'react-native',
     '@almadar/ui',
     '@almadar/core',
-    '@almadar/patterns',
+    '@almadar/core/patterns',
     '@react-navigation/native',
     'react-native-safe-area-context',
     'react-native-vector-icons',
