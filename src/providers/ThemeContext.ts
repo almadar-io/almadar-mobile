@@ -1,4 +1,5 @@
 import { createContext, useContext } from 'react';
+import type { Context } from 'react';
 
 /**
  * React Native Theme Structure
@@ -195,6 +196,6 @@ export const defaultTheme: RNTheme = {
   },
 };
 
-export const ThemeContext = createContext<RNTheme>(defaultTheme);
+export const ThemeContext: Context<RNTheme> = createContext<RNTheme>(defaultTheme);
 
 export const useTheme = () => useContext(ThemeContext);
