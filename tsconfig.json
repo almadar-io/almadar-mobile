@@ -17,12 +17,7 @@
     "declarationMap": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "noEmit": false,
-    "paths": {
-      "@almadar/ui/*": [
-        "../almadar-ui/dist/*"
-      ]
-    }
+    "noEmit": false
   },
   "include": [
     "src/**/*"
