@@ -157,7 +157,8 @@ export const FilterGroup: React.FC<FilterGroupProps> = ({
 
       if (next.min === undefined && next.max === undefined) {
         onFilterChange?.(field, null);
-        eventBus.emit('UI:FILTER', { entity, field, value: null, query });
+        eventBus.emit('UI:FILTER', { entity, field: `${field}_min`, value: null, query });
+        eventBus.emit('UI:FILTER', { entity, field: `${field}_max`, value: null, query });
         return;
       }
 
@@ -168,7 +169,10 @@ export const FilterGroup: React.FC<FilterGroupProps> = ({
 
       const value: NumberRangeValue = { min: next.min, max: next.max };
       onFilterChange?.(field, value);
-      eventBus.emit('UI:FILTER', { entity, field, value, query });
+      // Bus contract mirrors desktop + std-filter: one FILTER per side as
+      // `<field>_min` / `<field>_max` string values, never a combined object.
+      eventBus.emit('UI:FILTER', { entity, field: `${field}_min`, value: String(next.min), query });
+      eventBus.emit('UI:FILTER', { entity, field: `${field}_max`, value: String(next.max), query });
     },
     [onFilterChange, eventBus, entity, query]
   );
