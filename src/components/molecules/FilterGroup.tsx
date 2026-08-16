@@ -16,6 +16,7 @@ import { useTheme } from '../../providers/ThemeContext';
 import { useEventBus } from '../../hooks/useEventBus';
 import { Button } from '../atoms/Button';
 import { Select, SelectOption } from '../atoms/Select';
+import { Input } from '../atoms/Input';
 import { Badge } from '../atoms/Badge';
 import { Typography } from '../atoms/Typography';
 import { HStack, VStack } from '../atoms/Stack';
@@ -25,11 +26,47 @@ export interface FilterDefinition {
   field: string;
   label: string;
   /** Filter type */
-  filterType?: 'select' | 'toggle' | 'checkbox';
+  filterType?:
+    | 'text'
+    | 'select'
+    | 'toggle'
+    | 'checkbox'
+    | 'date'
+    | 'daterange'
+    | 'date-range'
+    | 'numberrange'
+    | 'number-range';
   /** Alias for filterType (schema compatibility) */
-  type?: 'select' | 'toggle' | 'checkbox';
+  type?:
+    | 'text'
+    | 'select'
+    | 'toggle'
+    | 'checkbox'
+    | 'date'
+    | 'daterange'
+    | 'date-range'
+    | 'numberrange'
+    | 'number-range';
   /** Options for select/toggle filters */
   options?: readonly string[];
+  /** Bounds for numberrange/number-range filters */
+  min?: number;
+  max?: number;
+  step?: number;
+}
+
+/** Resolve filter type, supporting both filterType and type aliases */
+const resolveFilterType = (filter: FilterDefinition) =>
+  filter.filterType ?? filter.type;
+
+/** Clamp a parsed numberrange endpoint to the filter's declared bounds */
+const clampRangeValue = (value: number, filter: FilterDefinition): number =>
+  Math.max(filter.min ?? -Infinity, Math.min(filter.max ?? Infinity, value));
+
+/** Two-ended numeric value for numberrange/number-range filters */
+export interface NumberRangeValue {
+  min: number;
+  max: number;
 }
 
 export interface FilterGroupProps {
@@ -38,7 +75,10 @@ export interface FilterGroupProps {
   /** Filter definitions from schema */
   filters: readonly FilterDefinition[];
   /** Callback when a filter changes - for EntityStore integration */
-  onFilterChange?: (field: string, value: string | null) => void;
+  onFilterChange?: (
+    field: string,
+    value: string | null | NumberRangeValue
+  ) => void;
   /** Callback to clear all filters */
   onClearAll?: () => void;
   /** Additional styles */
@@ -80,6 +120,12 @@ export const FilterGroup: React.FC<FilterGroupProps> = ({
     {}
   );
 
+  // Track in-progress numberrange endpoints separately - a range isn't a
+  // valid facet value (and shouldn't fire) until both ends are entered
+  const [rangeValues, setRangeValues] = useState<
+    Record<string, { min?: number; max?: number }>
+  >({});
+
   const handleFilterSelect = useCallback(
     (field: string, value: string | null) => {
       setSelectedValues((prev) => {
@@ -105,8 +151,31 @@ export const FilterGroup: React.FC<FilterGroupProps> = ({
     [onFilterChange, eventBus, entity, query]
   );
 
+  const handleRangeFilterSelect = useCallback(
+    (field: string, next: { min?: number; max?: number }) => {
+      setRangeValues((prev) => ({ ...prev, [field]: next }));
+
+      if (next.min === undefined && next.max === undefined) {
+        onFilterChange?.(field, null);
+        eventBus.emit('UI:FILTER', { entity, field, value: null, query });
+        return;
+      }
+
+      // Wait for both ends before firing - a partial range isn't a valid facet value
+      if (next.min === undefined || next.max === undefined) {
+        return;
+      }
+
+      const value: NumberRangeValue = { min: next.min, max: next.max };
+      onFilterChange?.(field, value);
+      eventBus.emit('UI:FILTER', { entity, field, value, query });
+    },
+    [onFilterChange, eventBus, entity, query]
+  );
+
   const handleClearAll = useCallback(() => {
     setSelectedValues({});
+    setRangeValues({});
 
     // Call callback if provided (for backward compat)
     onClearAll?.();
@@ -115,7 +184,11 @@ export const FilterGroup: React.FC<FilterGroupProps> = ({
     eventBus.emit('UI:CLEAR_FILTERS', { entity, query });
   }, [onClearAll, eventBus, entity, query]);
 
-  const activeFilterCount = Object.keys(selectedValues).length;
+  const activeRangeFilterCount = Object.values(rangeValues).filter(
+    (v) => v.min !== undefined && v.max !== undefined
+  ).length;
+  const activeFilterCount =
+    Object.keys(selectedValues).length + activeRangeFilterCount;
 
   const buildSelectOptions = (filter: FilterDefinition): SelectOption[] => {
     return [
@@ -125,6 +198,93 @@ export const FilterGroup: React.FC<FilterGroupProps> = ({
         label: opt,
       })) || []),
     ];
+  };
+
+  /**
+   * Renders the control for one filter. Branches on the desktop filterType
+   * contract; types without a 1:1 mobile primitive (date, daterange,
+   * date-range) are accepted by the type but render nothing until a mobile
+   * date-picker atom exists.
+   */
+  const renderFilterControl = (
+    filter: FilterDefinition,
+    selectOptions: SelectOption[] = buildSelectOptions(filter)
+  ) => {
+    const resolvedType = resolveFilterType(filter);
+
+    if (resolvedType === 'numberrange' || resolvedType === 'number-range') {
+      const range = rangeValues[filter.field] ?? {};
+      return (
+        <HStack spacing={8} align="center">
+          <Input
+            keyboardType="numeric"
+            placeholder="Min"
+            value={range.min !== undefined ? String(range.min) : ''}
+            onChangeText={(text) => {
+              if (text === '') {
+                handleRangeFilterSelect(filter.field, { ...range, min: undefined });
+                return;
+              }
+              const parsed = Number(text);
+              if (Number.isNaN(parsed)) return;
+              handleRangeFilterSelect(filter.field, {
+                ...range,
+                min: clampRangeValue(parsed, filter),
+              });
+            }}
+            containerStyle={styles.rangeInput}
+          />
+          <Typography variant="caption" color={theme.colors['muted-foreground']}>
+            -
+          </Typography>
+          <Input
+            keyboardType="numeric"
+            placeholder="Max"
+            value={range.max !== undefined ? String(range.max) : ''}
+            onChangeText={(text) => {
+              if (text === '') {
+                handleRangeFilterSelect(filter.field, { ...range, max: undefined });
+                return;
+              }
+              const parsed = Number(text);
+              if (Number.isNaN(parsed)) return;
+              handleRangeFilterSelect(filter.field, {
+                ...range,
+                max: clampRangeValue(parsed, filter),
+              });
+            }}
+            containerStyle={styles.rangeInput}
+          />
+        </HStack>
+      );
+    }
+
+    if (resolvedType === 'text') {
+      return (
+        <Input
+          value={selectedValues[filter.field] || ''}
+          onChangeText={(text) => handleFilterSelect(filter.field, text || null)}
+          placeholder={filter.label}
+        />
+      );
+    }
+
+    // No mobile date-picker atom exists yet - accepted by the type, unrendered
+    if (
+      resolvedType === 'date' ||
+      resolvedType === 'daterange' ||
+      resolvedType === 'date-range'
+    ) {
+      return null;
+    }
+
+    return (
+      <Select
+        value={selectedValues[filter.field] || 'all'}
+        onChange={(newValue: string) => handleFilterSelect(filter.field, newValue)}
+        options={selectOptions}
+      />
+    );
   };
 
   // Pills variant - horizontal toggle buttons
@@ -140,70 +300,85 @@ export const FilterGroup: React.FC<FilterGroupProps> = ({
             🔍
           </Typography>
         )}
-        {filters.map((filter) => (
-          <HStack key={filter.field} spacing={8} align="center">
-            <Typography
-              variant="caption"
-              color={theme.colors['muted-foreground']}
-            >
-              {filter.label}:
-            </Typography>
-            <HStack spacing={0} style={styles.pillGroup}>
-              <TouchableOpacity
-                onPress={() => handleFilterSelect(filter.field, null)}
-                style={[
-                  styles.pill,
-                  {
-                    backgroundColor: !selectedValues[filter.field]
-                      ? theme.colors.primary
-                      : theme.colors.card,
-                    borderColor: theme.colors.border,
-                  },
-                ]}
+        {filters.map((filter) => {
+          const resolvedType = resolveFilterType(filter);
+          // Pill buttons only make sense for a fixed option set; other
+          // filterTypes fall back to the shared control renderer
+          const usesOptionPills =
+            resolvedType === undefined ||
+            resolvedType === 'select' ||
+            resolvedType === 'toggle' ||
+            resolvedType === 'checkbox';
+
+          return (
+            <HStack key={filter.field} spacing={8} align="center">
+              <Typography
+                variant="caption"
+                color={theme.colors['muted-foreground']}
               >
-                <Typography
-                  variant="caption"
-                  style={{
-                    color: !selectedValues[filter.field]
-                      ? theme.colors['primary-foreground']
-                      : theme.colors['muted-foreground'],
-                  }}
-                >
-                  All
-                </Typography>
-              </TouchableOpacity>
-              {filter.options?.map((option) => (
-                <TouchableOpacity
-                  key={option}
-                  onPress={() => handleFilterSelect(filter.field, option)}
-                  style={[
-                    styles.pill,
-                    styles.pillWithBorder,
-                    {
-                      backgroundColor:
-                        selectedValues[filter.field] === option
+                {filter.label}:
+              </Typography>
+              {usesOptionPills ? (
+                <HStack spacing={0} style={styles.pillGroup}>
+                  <TouchableOpacity
+                    onPress={() => handleFilterSelect(filter.field, null)}
+                    style={[
+                      styles.pill,
+                      {
+                        backgroundColor: !selectedValues[filter.field]
                           ? theme.colors.primary
                           : theme.colors.card,
-                      borderColor: theme.colors.border,
-                    },
-                  ]}
-                >
-                  <Typography
-                    variant="caption"
-                    style={{
-                      color:
-                        selectedValues[filter.field] === option
+                        borderColor: theme.colors.border,
+                      },
+                    ]}
+                  >
+                    <Typography
+                      variant="caption"
+                      style={{
+                        color: !selectedValues[filter.field]
                           ? theme.colors['primary-foreground']
                           : theme.colors['muted-foreground'],
-                    }}
-                  >
-                    {option}
-                  </Typography>
-                </TouchableOpacity>
-              ))}
+                      }}
+                    >
+                      All
+                    </Typography>
+                  </TouchableOpacity>
+                  {filter.options?.map((option) => (
+                    <TouchableOpacity
+                      key={option}
+                      onPress={() => handleFilterSelect(filter.field, option)}
+                      style={[
+                        styles.pill,
+                        styles.pillWithBorder,
+                        {
+                          backgroundColor:
+                            selectedValues[filter.field] === option
+                              ? theme.colors.primary
+                              : theme.colors.card,
+                          borderColor: theme.colors.border,
+                        },
+                      ]}
+                    >
+                      <Typography
+                        variant="caption"
+                        style={{
+                          color:
+                            selectedValues[filter.field] === option
+                              ? theme.colors['primary-foreground']
+                              : theme.colors['muted-foreground'],
+                        }}
+                      >
+                        {option}
+                      </Typography>
+                    </TouchableOpacity>
+                  ))}
+                </HStack>
+              ) : (
+                renderFilterControl(filter)
+              )}
             </HStack>
-          </HStack>
-        ))}
+          );
+        })}
 
         {/* Clear all button */}
         {activeFilterCount > 0 && (
@@ -240,13 +415,7 @@ export const FilterGroup: React.FC<FilterGroupProps> = ({
             >
               {filter.label}
             </Typography>
-            <Select
-              value={selectedValues[filter.field] || 'all'}
-              onChange={(newValue: string) =>
-                handleFilterSelect(filter.field, newValue)
-              }
-              options={buildSelectOptions(filter)}
-            />
+            {renderFilterControl(filter)}
           </VStack>
         ))}
         {activeFilterCount > 0 && (
@@ -273,19 +442,13 @@ export const FilterGroup: React.FC<FilterGroupProps> = ({
         )}
         {filters.map((filter) => (
           <View key={filter.field} style={styles.compactSelect}>
-            <Select
-              value={selectedValues[filter.field] || 'all'}
-              onChange={(newValue: string) =>
-                handleFilterSelect(filter.field, newValue)
-              }
-              options={[
-                { value: 'all', label: `All ${filter.label}` },
-                ...(filter.options?.map((opt) => ({
-                  value: opt,
-                  label: opt,
-                })) || []),
-              ]}
-            />
+            {renderFilterControl(filter, [
+              { value: 'all', label: `All ${filter.label}` },
+              ...(filter.options?.map((opt) => ({
+                value: opt,
+                label: opt,
+              })) || []),
+            ])}
           </View>
         ))}
 
@@ -341,7 +504,7 @@ export const FilterGroup: React.FC<FilterGroupProps> = ({
           </HStack>
         )}
 
-        {/* Filter selects */}
+        {/* Filter controls */}
         {filters.map((filter) => (
           <VStack key={filter.field} spacing={4}>
             <Typography
@@ -350,13 +513,7 @@ export const FilterGroup: React.FC<FilterGroupProps> = ({
             >
               {filter.label}
             </Typography>
-            <Select
-              value={selectedValues[filter.field] || 'all'}
-              onChange={(newValue: string) =>
-                handleFilterSelect(filter.field, newValue)
-              }
-              options={buildSelectOptions(filter)}
-            />
+            {renderFilterControl(filter)}
           </VStack>
         ))}
 
@@ -400,6 +557,9 @@ const styles = StyleSheet.create({
   },
   compactSelect: {
     minWidth: 120,
+  },
+  rangeInput: {
+    width: 84,
   },
   defaultContainer: {
     padding: 16,
