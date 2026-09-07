@@ -43,6 +43,30 @@ export interface ModalSlotProps {
   closeEvent?: EventKey;
 }
 
+/** Payload wraps the modal under a `modal` key instead of sending it bare. */
+function isModalWrapper(value: EventPayload): value is EventPayload & { modal: EventPayload } {
+  return typeof value.modal === 'object' && value.modal !== null && !Array.isArray(value.modal);
+}
+
+/**
+ * Load-bearing field check (`id`); `content` is a live React node — outside
+ * `EventPayload`'s JSON contract by design (the bus carries it in-process,
+ * never serialized), so it's narrowed with one bounded cast rather than
+ * reconstructed field-by-field like the rest.
+ */
+function toModalContent(value: EventPayload): ModalContent | null {
+  if (typeof value.id !== 'string') return null;
+  return {
+    id: value.id,
+    title: typeof value.title === 'string' ? value.title : undefined,
+    content: value.content as React.ReactNode,
+    actions: Array.isArray(value.actions) ? (value.actions as ModalAction[]) : undefined,
+    size: value.size === 'sm' || value.size === 'md' || value.size === 'lg' ? value.size : undefined,
+    closeOnBackdrop: typeof value.closeOnBackdrop === 'boolean' ? value.closeOnBackdrop : undefined,
+    showCloseButton: typeof value.showCloseButton === 'boolean' ? value.showCloseButton : undefined,
+  };
+}
+
 export const ModalSlot: React.FC<ModalSlotProps> = ({
   style,
   isLoading,
@@ -87,8 +111,9 @@ export const ModalSlot: React.FC<ModalSlotProps> = ({
     const handleOpen: BusEventListener = (event) => {
       const payload = event.payload;
       if (!payload) return;
-      const modalPayload = payload as unknown as ModalContent | { modal: ModalContent };
-      const modal = 'modal' in modalPayload ? modalPayload.modal : modalPayload;
+      const modalPayload = isModalWrapper(payload) ? payload.modal : payload;
+      const modal = toModalContent(modalPayload);
+      if (!modal) return;
       openModal({
         ...modal,
         size: modal.size || defaultSize,

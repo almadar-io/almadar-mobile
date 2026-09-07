@@ -122,8 +122,11 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({
 
     eventBus.emit(`UI:${saveAction}`, {
       entity,
-      signature: signatureData,
-    } as unknown as EventPayload);
+      signature: {
+        timestamp: signatureData.timestamp,
+        strokes: signatureData.strokes.map((s) => ({ points: s.points.map((p) => ({ ...p })) })),
+      },
+    });
 
     onSave?.(signatureData);
   }, [strokes, currentStroke, entity, saveAction, onSave, eventBus]);

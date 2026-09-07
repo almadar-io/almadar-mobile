@@ -16,7 +16,7 @@ import type { EventKey, EventPayload } from '../../types';
 
 export type DragHandlePosition = 'left' | 'right';
 
-export interface SortableListProps<T = Record<string, unknown>> {
+export interface SortableListProps<T extends EventPayload = EventPayload> {
   items: T[];
   renderItem: (item: T, index: number) => React.ReactNode;
   keyExtractor: (item: T, index: number) => string;
@@ -29,7 +29,7 @@ export interface SortableListProps<T = Record<string, unknown>> {
   entity?: string;
 }
 
-export const SortableList = <T,>({
+export const SortableList = <T extends EventPayload,>({
   items: initialItems,
   renderItem,
   keyExtractor,
@@ -61,7 +61,7 @@ export const SortableList = <T,>({
       next.splice(toIndex, 0, moved);
       onReorder?.(next);
       if (reorderEvent) {
-        const payload: EventPayload = { items: next as unknown as EventPayload[], fromIndex, toIndex };
+        const payload: EventPayload = { items: next.map((item) => ({ ...item })), fromIndex, toIndex };
         eventBus.emit(`UI:${reorderEvent}`, payload);
       }
       return next;

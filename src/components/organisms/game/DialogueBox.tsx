@@ -148,7 +148,7 @@ export const DialogueBox: React.FC<DialogueBoxProps> = ({
   // Handle choice selection
   const handleChoice = useCallback((choice: DialogueChoice, index: number) => {
     setSelectedChoice(index);
-    if (choiceEvent) eventBus.emit(`UI:${choiceEvent}`, { choice } as unknown as EventPayload);
+    if (choiceEvent) eventBus.emit(`UI:${choiceEvent}`, { choice: { ...choice } });
     onChoice?.(choice);
   }, [onChoice, choiceEvent, eventBus]);
 

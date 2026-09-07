@@ -70,7 +70,7 @@ export const BattleTemplate: React.FC<BattleTemplateProps> = ({
 
   const handleMenuSelect = (option: MenuOption) => {
     if (option.event) {
-      eventBus.emit(`UI:${option.event}`, { option, entity } as unknown as EventPayload);
+      eventBus.emit(`UI:${option.event}`, { option: { ...option }, entity });
     }
     if (option.navigatesTo) {
       eventBus.emit('UI:navigate', { to: option.navigatesTo } as EventPayload);

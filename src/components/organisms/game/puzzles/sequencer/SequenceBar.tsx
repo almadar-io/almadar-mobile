@@ -22,7 +22,7 @@ export interface SequenceStep {
   actionId: string;
   actionName: string;
   icon?: string;
-  params?: Record<string, unknown>;
+  params?: EventPayload;
   isActive?: boolean;
 }
 
@@ -73,7 +73,7 @@ export const SequenceBar: React.FC<SequenceBarProps> = ({
   }, [currentStep]);
 
   const handleStepPress = (step: SequenceStep, index: number) => {
-    eventBus.emit('UI:SEQUENCE_STEP_PRESSED', { step, index } as unknown as EventPayload);
+    eventBus.emit('UI:SEQUENCE_STEP_PRESSED', { step: { ...step }, index });
     onStepPress?.(step, index);
   };
 
@@ -83,7 +83,7 @@ export const SequenceBar: React.FC<SequenceBarProps> = ({
   };
 
   const handlePlay = () => {
-    eventBus.emit('UI:SEQUENCE_PLAY', { steps } as unknown as EventPayload);
+    eventBus.emit('UI:SEQUENCE_PLAY', { steps: steps.map((s) => ({ ...s })) });
     onPlay?.();
   };
 

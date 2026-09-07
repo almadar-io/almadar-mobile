@@ -171,7 +171,7 @@ export const StateArchitectBoard: React.FC<StateArchitectBoardProps> = ({
     setTransitions((prev) => [...prev, newTrans]);
     setAddingTransition(false);
     setSelectedTarget('');
-    eventBus.emit('UI:STATE_ARCHITECT_ADD_TRANSITION', { transition: newTrans } as unknown as EventPayload);
+    eventBus.emit('UI:STATE_ARCHITECT_ADD_TRANSITION', { transition: { ...newTrans } });
   }, [selectedState, selectedTarget, selectedEvent, eventBus]);
 
   const handleRemoveTransition = useCallback((transId: string) => {

@@ -103,7 +103,7 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
           styles.trackFill,
           {
             backgroundColor: theme.colors.primary,
-            width: `${fraction * 100}%` as unknown as number,
+            width: `${fraction * 100}%`,
           },
         ]}
       />
@@ -113,7 +113,7 @@ export const RangeSlider: React.FC<RangeSliderProps> = ({
           {
             backgroundColor: theme.colors.primary,
             borderColor: theme.colors.card,
-            left: `${fraction * 100}%` as unknown as number,
+            left: `${fraction * 100}%`,
             marginLeft: -THUMB_SIZE / 2,
             ...theme.shadows.sm,
           },

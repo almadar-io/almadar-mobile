@@ -34,6 +34,23 @@ export interface ToastSlotProps {
   clearEvent?: EventKey;
 }
 
+/** Payload wraps the toast under a `toast` key instead of sending it bare. */
+function isToastWrapper(value: EventPayload): value is EventPayload & { toast: EventPayload } {
+  return typeof value.toast === 'object' && value.toast !== null && !Array.isArray(value.toast);
+}
+
+/** Load-bearing field check — the rest of `ToastItem` is optional. */
+function isToastPayload(value: EventPayload): value is EventPayload & ToastItem {
+  return typeof value.message === 'string';
+}
+
+/** `{toastId}` (direct) or `{payload: toastId}` (bus-relayed) dismiss forms. */
+function extractDismissToastId(value: EventPayload): string | undefined {
+  if (typeof value.toastId === 'string') return value.toastId;
+  if (typeof value.payload === 'string') return value.payload;
+  return undefined;
+}
+
 export const ToastSlot: React.FC<ToastSlotProps> = ({
   style,
   position = 'top',
@@ -73,17 +90,16 @@ export const ToastSlot: React.FC<ToastSlotProps> = ({
     const handleShow: BusEventListener = (event) => {
       const payload = event.payload;
       if (!payload) return;
-      const showPayload = payload as unknown as ToastItem | { toast: ToastItem };
-      showToast(showPayload);
+      const toastData = isToastWrapper(payload) ? payload.toast : payload;
+      if (isToastPayload(toastData)) {
+        showToast(toastData);
+      }
     };
 
     const handleDismiss: BusEventListener = (event) => {
       const payload = event.payload;
       if (!payload) return;
-      const dismissPayload = payload as unknown as { toastId: string } | { payload: string };
-      const toastId = 'toastId' in dismissPayload 
-        ? dismissPayload.toastId 
-        : ('payload' in dismissPayload ? dismissPayload.payload : undefined);
+      const toastId = extractDismissToastId(payload);
       if (typeof toastId === 'string') {
         dismissToast(toastId);
       }

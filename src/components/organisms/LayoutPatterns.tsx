@@ -71,7 +71,8 @@ export const LayoutPatterns: React.FC<LayoutPatternsProps> = ({
 
   const handleApplyPattern = (pattern: LayoutPattern) => {
     if (applyEvent) {
-      eventBus.emit(`UI:${applyEvent}`, { pattern } as unknown as EventPayload);
+      // `preview` is a React node — not serializable payload data.
+      eventBus.emit(`UI:${applyEvent}`, { pattern: { ...pattern, preview: undefined } });
     }
   };
 

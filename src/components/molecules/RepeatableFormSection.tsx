@@ -10,7 +10,7 @@ import { VStack, HStack } from '../atoms/Stack';
 import { LoadingState } from './LoadingState';
 import { ErrorState } from './ErrorState';
 import { EmptyState } from './EmptyState';
-import type { EntityRow, EventKey, EventPayload, FieldValue } from '../../types';
+import type { EventKey, EventPayload, FieldValue } from '../../types';
 
 export interface RepeatableItem {
   id: string;
@@ -107,7 +107,7 @@ export const RepeatableFormSection: React.FC<RepeatableFormSectionProps> = ({
 
     const addPayload: EventPayload = {
       entity,
-      item: newItem as unknown as EntityRow,
+      item: { ...newItem },
       index: newItems.length - 1,
       totalItems: newItems.length,
     };
@@ -127,7 +127,7 @@ export const RepeatableFormSection: React.FC<RepeatableFormSectionProps> = ({
 
     const removePayload: EventPayload = {
       entity,
-      item: removedItem as unknown as EntityRow,
+      item: { ...removedItem },
       index,
       totalItems: newItems.length,
     };
@@ -144,7 +144,7 @@ export const RepeatableFormSection: React.FC<RepeatableFormSectionProps> = ({
 
     const updatePayload: EventPayload = {
       entity,
-      item: newItems[index] as unknown as EntityRow,
+      item: { ...newItems[index] },
       index,
       data,
     };

@@ -77,7 +77,7 @@ export const CodeView: React.FC<CodeViewProps> = ({
 
   const handleRun = () => {
     if (runEvent) {
-      eventBus.emit(`UI:${runEvent}`, { sections, fullCode } as unknown as EventPayload);
+      eventBus.emit(`UI:${runEvent}`, { sections: sections.map((s) => ({ ...s })), fullCode });
     }
   };
 

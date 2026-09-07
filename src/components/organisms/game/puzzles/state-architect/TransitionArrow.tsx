@@ -102,7 +102,7 @@ export const TransitionArrow: React.FC<TransitionArrowProps> = ({
   const typeStyle = colors[transition.type];
 
   const handlePress = () => {
-    eventBus.emit('UI:TRANSITION_PRESSED', { transition } as unknown as EventPayload);
+    eventBus.emit('UI:TRANSITION_PRESSED', { transition: { ...transition } });
     onPress?.(transition);
   };
 

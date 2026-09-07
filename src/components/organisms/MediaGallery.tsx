@@ -103,14 +103,14 @@ export const MediaGallery: React.FC<MediaGalleryProps> = ({
 
   const handleItemPress = (item: MediaItem, index: number) => {
     if (selectEvent) {
-      eventBus.emit(`UI:${selectEvent}`, { ...actionPayload, item, index } as unknown as EventPayload);
+      eventBus.emit(`UI:${selectEvent}`, { ...actionPayload, item: { ...item }, index });
     }
     setSelectedIndex(index);
   };
 
   const handleItemLongPress = (item: MediaItem, index: number) => {
     if (contextEvent) {
-      eventBus.emit(`UI:${contextEvent}`, { ...actionPayload, item, index } as unknown as EventPayload);
+      eventBus.emit(`UI:${contextEvent}`, { ...actionPayload, item: { ...item }, index });
     }
   };
 

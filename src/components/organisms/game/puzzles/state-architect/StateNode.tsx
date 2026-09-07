@@ -99,12 +99,12 @@ export const StateNode: React.FC<StateNodeProps> = ({
   const typeStyle = colors[node.type];
 
   const handlePress = () => {
-    eventBus.emit('UI:STATE_NODE_PRESSED', { node } as unknown as EventPayload);
+    eventBus.emit('UI:STATE_NODE_PRESSED', { node: { ...node } });
     onPress?.(node);
   };
 
   const handleLongPress = () => {
-    eventBus.emit('UI:STATE_NODE_LONG_PRESSED', { node } as unknown as EventPayload);
+    eventBus.emit('UI:STATE_NODE_LONG_PRESSED', { node: { ...node } });
     onLongPress?.(node);
   };
 

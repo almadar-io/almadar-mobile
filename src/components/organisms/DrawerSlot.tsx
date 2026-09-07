@@ -46,6 +46,31 @@ export interface DrawerSlotProps {
   closeEvent?: EventKey;
 }
 
+/** Payload wraps the drawer under a `drawer` key instead of sending it bare. */
+function isDrawerWrapper(value: EventPayload): value is EventPayload & { drawer: EventPayload } {
+  return typeof value.drawer === 'object' && value.drawer !== null && !Array.isArray(value.drawer);
+}
+
+/**
+ * Load-bearing field check (`id`); `content` is a live React node — outside
+ * `EventPayload`'s JSON contract by design (the bus carries it in-process,
+ * never serialized), so it's narrowed with one bounded cast rather than
+ * reconstructed field-by-field like the rest.
+ */
+function toDrawerContent(value: EventPayload): DrawerContent | null {
+  if (typeof value.id !== 'string') return null;
+  return {
+    id: value.id,
+    title: typeof value.title === 'string' ? value.title : undefined,
+    content: value.content as React.ReactNode,
+    actions: Array.isArray(value.actions) ? (value.actions as DrawerAction[]) : undefined,
+    placement: value.placement === 'left' || value.placement === 'right' ? value.placement : undefined,
+    width: typeof value.width === 'number' ? value.width : undefined,
+    closeOnBackdrop: typeof value.closeOnBackdrop === 'boolean' ? value.closeOnBackdrop : undefined,
+    showCloseButton: typeof value.showCloseButton === 'boolean' ? value.showCloseButton : undefined,
+  };
+}
+
 export const DrawerSlot: React.FC<DrawerSlotProps> = ({
   style,
   isLoading,
@@ -91,8 +116,9 @@ export const DrawerSlot: React.FC<DrawerSlotProps> = ({
     const handleOpen: BusEventListener = (event) => {
       const payload = event.payload;
       if (!payload) return;
-      const drawerPayload = payload as unknown as DrawerContent | { drawer: DrawerContent };
-      const drawer = 'drawer' in drawerPayload ? drawerPayload.drawer : drawerPayload;
+      const drawerPayload = isDrawerWrapper(payload) ? payload.drawer : payload;
+      const drawer = toDrawerContent(drawerPayload);
+      if (!drawer) return;
       openDrawer({
         ...drawer,
         placement: drawer.placement || defaultPlacement,

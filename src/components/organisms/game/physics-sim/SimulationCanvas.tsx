@@ -110,7 +110,7 @@ export const SimulationCanvas: React.FC<SimulationCanvasProps> = ({
 
     if (clickedBody) {
       setSelectedBodyId(clickedBody.id);
-      eventBus.emit('UI:PHYSICS_BODY_PRESSED', { body: clickedBody } as unknown as EventPayload);
+      eventBus.emit('UI:PHYSICS_BODY_PRESSED', { body: { ...clickedBody } });
       onBodyPress?.(clickedBody);
     } else {
       eventBus.emit('UI:PHYSICS_CANVAS_PRESSED', { x, y } as EventPayload);

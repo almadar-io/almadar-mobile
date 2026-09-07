@@ -29,7 +29,7 @@ export interface ActionDefinition {
     name: string;
     type: 'string' | 'number' | 'boolean' | 'select';
     options?: string[];
-    default?: unknown;
+    default?: string | number | boolean;
   }>;
 }
 
@@ -97,7 +97,7 @@ export const ActionPalette: React.FC<ActionPaletteProps> = ({
   };
 
   const handleActionPress = (action: ActionDefinition) => {
-    eventBus.emit('UI:ACTION_SELECTED', { action } as unknown as EventPayload);
+    eventBus.emit('UI:ACTION_SELECTED', { action: { ...action } });
     onActionSelect?.(action);
   };
 

@@ -76,7 +76,7 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
 
   const handleDownload = (document: Document) => {
     if (downloadEvent) {
-      eventBus.emit(`UI:${downloadEvent}`, { document } as unknown as EventPayload);
+      eventBus.emit(`UI:${downloadEvent}`, { document: { ...document } });
     }
   };
 

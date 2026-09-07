@@ -66,7 +66,8 @@ export const ComponentPatterns: React.FC<ComponentPatternsProps> = ({
 
   const handleUsePattern = (pattern: ComponentPattern) => {
     if (useEvent) {
-      eventBus.emit(`UI:${useEvent}`, { pattern } as unknown as EventPayload);
+      // `preview` is a React node — not serializable payload data.
+      eventBus.emit(`UI:${useEvent}`, { pattern: { ...pattern, preview: undefined } });
     }
   };
 

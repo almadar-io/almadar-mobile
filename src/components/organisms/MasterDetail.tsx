@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import { useTheme } from '../../providers/ThemeContext';
 import { useEventBus } from '../../hooks/useEventBus';
-import type { EventPayload } from '@almadar/core';
 import { VStack, HStack } from '../atoms/Stack';
 import { Card } from '../atoms/Card';
 import { Typography } from '../atoms/Typography';
@@ -89,7 +88,7 @@ export const MasterDetail: React.FC<MasterDetailProps> = ({
   const handleSelect = useCallback(
     (item: MasterItem) => {
       if (selectEvent) {
-        eventBus.emit(`UI:${selectEvent}`, { item, entity } as unknown as EventPayload);
+        eventBus.emit(`UI:${selectEvent}`, { item: { ...item }, entity });
       }
       onSelect?.(item);
       if (selectedId === undefined) {

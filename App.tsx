@@ -47,14 +47,7 @@ const styles = StyleSheet.create({
 
 // Check if Storybook mode is enabled
 // EXPO_PUBLIC_* vars are automatically inlined by Expo SDK 49+ without any babel plugin
-const SHOW_STORYBOOK = process.env.EXPO_PUBLIC_STORYBOOK === 'true';
 
-let ExportedApp: React.FC = MainApp;
-
-if (SHOW_STORYBOOK) {
-  // Import Storybook UI when enabled
-  const Storybook = require('./.storybook').default;
-  ExportedApp = Storybook;
-}
+const ExportedApp: React.FC = MainApp;
 
 export default ExportedApp;

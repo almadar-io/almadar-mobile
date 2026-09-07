@@ -2,7 +2,6 @@ import React from 'react';
 import { View, ScrollView, StyleSheet, ViewStyle } from 'react-native';
 import { useTheme } from '../../providers/ThemeContext';
 import { useEventBus } from '../../hooks/useEventBus';
-import type { EventPayload } from '@almadar/core';
 import { Card } from '../atoms/Card';
 import { Typography } from '../atoms/Typography';
 import { HStack, VStack } from '../atoms/Stack';
@@ -66,13 +65,29 @@ export const StateMachineView: React.FC<StateMachineViewProps> = ({
 
   const handleStateClick = (stateId: string) => {
     if (stateClickEvent) {
-      eventBus.emit(`UI:${stateClickEvent}`, { stateId, stateMachine } as unknown as EventPayload);
+      // `states`/`transitions` are arrays of nominal types — each needs its
+      // own fresh literal to satisfy `EventPayload`.
+      eventBus.emit(`UI:${stateClickEvent}`, {
+        stateId,
+        stateMachine: {
+          ...stateMachine,
+          states: stateMachine.states.map((s) => ({ ...s })),
+          transitions: stateMachine.transitions.map((t) => ({ ...t })),
+        },
+      });
     }
   };
 
   const handleTransitionClick = (transitionId: string) => {
     if (transitionClickEvent) {
-      eventBus.emit(`UI:${transitionClickEvent}`, { transitionId, stateMachine } as unknown as EventPayload);
+      eventBus.emit(`UI:${transitionClickEvent}`, {
+        transitionId,
+        stateMachine: {
+          ...stateMachine,
+          states: stateMachine.states.map((s) => ({ ...s })),
+          transitions: stateMachine.transitions.map((t) => ({ ...t })),
+        },
+      });
     }
   };
 

@@ -24,7 +24,7 @@ export type UIComponentType =
 export interface UIComponentConfig {
   type: UIComponentType;
   id: string;
-  props?: Record<string, unknown>;
+  props?: EventPayload;
   children?: UIComponentConfig[];
   content?: string;
 }
@@ -33,7 +33,7 @@ export interface UISlot {
   id: string;
   name: string;
   components: UIComponentConfig[];
-  metadata?: Record<string, unknown>;
+  metadata?: EventPayload;
 }
 
 export interface UISlotRendererProps {
@@ -52,6 +52,50 @@ export interface UISlotRendererProps {
   slotEvent?: EventKey;
   /** Custom component renderers */
   customRenderers?: Record<string, React.FC<Record<string, unknown>>>;
+}
+
+const UI_COMPONENT_TYPES: readonly UIComponentType[] = ['card', 'text', 'button', 'input', 'image', 'list', 'custom'];
+
+function asEventPayload(value: EventPayload[keyof EventPayload]): EventPayload | undefined {
+  if (value === null || value === undefined || typeof value !== 'object') return undefined;
+  // `Array.isArray`'s negative narrowing doesn't exclude `readonly T[]` from a
+  // union (a TS limitation, not a type gap) — every non-EventPayload member
+  // is runtime-excluded above, so this is a bounded single-hop cast.
+  if (Array.isArray(value) || value instanceof Date) return undefined;
+  return value as EventPayload;
+}
+
+function toUIComponentConfig(value: EventPayload): UIComponentConfig | null {
+  if (typeof value.id !== 'string') return null;
+  if (typeof value.type !== 'string' || !UI_COMPONENT_TYPES.includes(value.type as UIComponentType)) return null;
+  return {
+    type: value.type as UIComponentType,
+    id: value.id,
+    props: asEventPayload(value.props),
+    children: Array.isArray(value.children)
+      ? value.children
+          .map((c) => (typeof c === 'object' && c !== null && !Array.isArray(c) ? toUIComponentConfig(c) : null))
+          .filter((c): c is UIComponentConfig => c !== null)
+      : undefined,
+    content: typeof value.content === 'string' ? value.content : undefined,
+  };
+}
+
+/** Payload wraps the slot under a `slot` key instead of sending it bare. */
+function isUISlotWrapper(value: EventPayload): value is EventPayload & { slot: EventPayload } {
+  return typeof value.slot === 'object' && value.slot !== null && !Array.isArray(value.slot);
+}
+
+function toUISlot(value: EventPayload): UISlot | null {
+  if (typeof value.id !== 'string' || typeof value.name !== 'string' || !Array.isArray(value.components)) return null;
+  return {
+    id: value.id,
+    name: value.name,
+    components: value.components
+      .map((c) => (typeof c === 'object' && c !== null && !Array.isArray(c) ? toUIComponentConfig(c) : null))
+      .filter((c): c is UIComponentConfig => c !== null),
+    metadata: asEventPayload(value.metadata),
+  };
 }
 
 export const UISlotRenderer: React.FC<UISlotRendererProps> = ({
@@ -83,8 +127,9 @@ export const UISlotRenderer: React.FC<UISlotRendererProps> = ({
     const handleUpdate: BusEventListener = (event) => {
       const payload = event.payload;
       if (!payload) return;
-      const slotPayload = payload as unknown as UISlot | { slot: UISlot };
-      handleSlotUpdate(slotPayload);
+      const rawSlot = isUISlotWrapper(payload) ? payload.slot : payload;
+      const slotData = toUISlot(rawSlot);
+      if (slotData) handleSlotUpdate(slotData);
     };
 
     const handleClear = () => {

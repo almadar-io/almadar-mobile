@@ -78,7 +78,7 @@ export const InventoryPanel: React.FC<InventoryPanelProps> = ({
     // Double tap detection
     if (lastTap && now - lastTap < 300 && item) {
       // Double tap - use item
-      if (useItemEvent) eventBus.emit(`UI:${useItemEvent}`, { item } as unknown as EventPayload);
+      if (useItemEvent) eventBus.emit(`UI:${useItemEvent}`, { item: { ...item } });
       onUseItem?.(item);
       setLastTap(null);
       return;

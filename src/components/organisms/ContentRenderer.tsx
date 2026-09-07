@@ -44,7 +44,8 @@ export interface ContentItem {
   alt?: string;
   variant?: 'default' | 'primary' | 'secondary' | 'ghost' | 'destructive';
   items?: ContentItem[];
-  metadata?: Record<string, unknown>;
+  /** Plain data bag (heading level, color, list-ordered flag, …) — event-payload-safe. */
+  metadata?: EventPayload;
   style?: ViewStyle;
 }
 
@@ -103,7 +104,7 @@ export const ContentRenderer: React.FC<ContentRendererProps> = ({
       itemId: item.id,
       action: item.href,
       metadata: item.metadata,
-    } as unknown as EventPayload);
+    });
 
     if (item.href) {
       handleLinkPress(item.href, item.id);
@@ -192,7 +193,7 @@ export const ContentRenderer: React.FC<ContentRendererProps> = ({
           itemId: item.id,
           action: item.href,
           metadata: item.metadata,
-        } as unknown as EventPayload}
+        }}
       >
         {item.content || item.title || 'Button'}
       </Button>
