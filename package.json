@@ -1,6 +1,6 @@
 {
   "name": "@almadar/mobile",
-  "version": "1.20.0",
+  "version": "1.21.0",
   "description": "React Native UI components for Almadar - extends @almadar/ui",
   "type": "module",
   "main": "index.js",
@@ -47,6 +47,9 @@
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "build": "tsup && tsc --declaration --emitDeclarationOnly --outDir dist --skipLibCheck",
     "build:watch": "tsup --watch",
@@ -60,9 +63,9 @@
     "test:web": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@almadar/core": "^10.105.0",
-    "@almadar/runtime": "^6.92.0",
-    "@almadar/ui": "^6.38.0",
+    "@almadar/core": "^10.128.0",
+    "@almadar/runtime": "^6.111.0",
+    "@almadar/ui": "^6.66.0",
     "@react-native-async-storage/async-storage": "2.2.0",
     "expo": "^54.0.0",
     "expo-status-bar": "~3.0.9",
